@@ -1,0 +1,23 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "S3" extends = "ListPanel">
+
+    <interface>
+        <field id = "topcontainer" type="node" />
+        <field id="gridPanel" type="node" /> 
+        <field id="videoUrl" type="string" />
+    </interface>
+    <script type = "text/brightscript" uri = "pkg:/components/s3/s3.brs"/>
+
+    <children >
+        <LabelList id = "l3">
+            <ContentNode role = "content">
+                <ContentNode title = "Play" />
+            </ContentNode>
+        </LabelList>
+        <Video id="vd" enableUI="true" translation="[0,0]"/>
+    </children>
+
+</component>

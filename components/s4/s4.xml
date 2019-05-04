@@ -1,0 +1,13 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "S4" extends = "Panel">
+
+    <script type = "text/brightscript" uri = "pkg:/components/s4/s4.brs"/>
+
+    <children >
+        <Video id = "exampleVideo"/>
+    </children>
+
+</component>

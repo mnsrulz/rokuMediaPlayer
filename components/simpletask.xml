@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="SimpleTask" extends="Task">
+  <interface>
+    <field id = "uri" type = "string" />
+    <field id = "content" type = "string" />
+  </interface>
+<script type="text/brightscript" >
+<![CDATA[
+
+sub init()
+  print "in SimpleTask init"
+	m.top.functionName = "executeTask"
+end sub
+
+sub executeTask()
+  print "executing SimpleTask method"
+  readInternet = createObject("roUrlTransfer")
+  print "executing " + m.top.uri
+  readInternet.setUrl(m.top.uri)
+  result = readInternet.getToString()
+  print "got result pritning it"
+  resultAsJson = ParseJSON(result)
+  m.top.content = result
+end sub
+
+]]>
+</script>
+
+</component>

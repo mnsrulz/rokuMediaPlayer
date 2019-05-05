@@ -8,12 +8,12 @@ sub showChannelSGScreen()
   screen = CreateObject("roSGScreen")
   m.port = CreateObject("roMessagePort")
 
+  print m.port
+
   screen.setMessagePort(m.port)
   scene = screen.CreateScene("S0")
-  
+
   screen.show()
-
-
 
   while(true)
     msg = wait(0, m.port)

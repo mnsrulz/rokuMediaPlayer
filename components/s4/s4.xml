@@ -3,11 +3,38 @@
 <!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
 
 <component name = "S4" extends = "Panel">
-
+    <interface>
+        <field id="video" type="node" />
+        <field id="mediaItem" type="node" onChange = "readmediaitem" />
+        <field id="random" type="string" onChange="readRandom" />
+    </interface>
     <script type = "text/brightscript" uri = "pkg:/components/s4/s4.brs"/>
 
-    <children >
-        <Video id = "exampleVideo"/>
+    <children>
+        <LayoutGroup 
+            id = "layoutgroup4" 
+            translation = "[ 0, 40 ]" 
+            color = "0x101010C0" itemSpacings = "[8]">
+            <Label 
+                id = "mediaTitle" width="645"
+                wrap = "true"
+                Lines = "2" 
+                font = "font:MediumBoldSystemFont" />
+            <LabelList id = "mediaSourceList" itemSize="[512, 32]">
+                <ContentNode role = "content">
+                    <ContentNode title = "Anythin" />
+                    <ContentNode title = "Choose" />
+                    <ContentNode title = "Play" />
+                </ContentNode>
+            </LabelList>
+            <Label 
+                id = "mediaDesc" width="645"
+                wrap = "true" 
+                maxLines = "4"
+                font = "font:SmallestSystemFont" />
+
+        </LayoutGroup>
+
     </children>
 
 </component>

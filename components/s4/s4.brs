@@ -50,7 +50,6 @@ sub preloadmedia()
 
     videoContent = createObject("RoSGNode", "ContentNode")
     videoContent.url = selectedmediaitem.url
-    ''videoContent.title = "Test Video"
     videoContent.streamformat = "mkv"   ''should be passed from top
     videoContent.enableUI = true
 
@@ -58,21 +57,6 @@ sub preloadmedia()
     m.top.video.control = "prebuffer"
 
 end sub
-
-' function onKeyEvent(key as string, press as boolean) as boolean
-'     handled = false
-'     if press then
-'         if (key = "back") then
-'             handled = false
-'         else
-'             if (key = "OK") then
-
-'             end if
-'             handled = true
-'         end if
-'     end if
-'     return handled
-' end function
 
 function onKeyEvent(key as string,press as boolean) as boolean
     if press then

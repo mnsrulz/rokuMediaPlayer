@@ -1,8 +1,6 @@
 
 sub init()
     m.top.backgroundURI = "pkg:/images/rsgde_bg_hd.jpg"
-    
-
     oh = createObject("roSGNode", "OverHang")
     m.top.appendChild(oh)
     m.Overhang = oh
@@ -67,10 +65,6 @@ sub categoryLoaded()
     ContentNode_object = createObject("RoSGNode", "ContentNode")
 
     m.categoriespanel.list.content = ContentNode_object
-
-    ' ContentNode_child_object = ContentNode_object.createChild("ContentNode")
-    ' ContentNode_child_object.title = "Choose category"
-
     for each categoryKey in resultAsJson
         ContentNode_child_object = ContentNode_object.createChild("ContentNode")
         ContentNode_child_object.title = categoryKey.displayName
@@ -86,7 +80,6 @@ end sub
 sub showcategorymedia()
     categorycontent = m.categoriespanel.list.content.getChild(m.categoriespanel.list.itemFocused)
     m.gridPanel.categoryKey = categorycontent.ShortDescriptionLine1
-    ' m.gridPanel.overhangtext = categorycontent.title
 end sub
 
 sub setpanels()

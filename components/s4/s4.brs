@@ -18,6 +18,7 @@ sub readmediaitem()
         ContentNode_child_object = ContentNode_object.createChild("ContentNode")
         ContentNode_child_object.title = categoryKey.contentid
         ContentNode_child_object.url = categoryKey.url
+        ContentNode_child_object.ShortDescriptionLine2 = categoryKey.contentid.Split("|")[1]
         print categoryKey.displayName
     end for
 
@@ -50,13 +51,31 @@ sub preloadmedia()
 
     videoContent = createObject("RoSGNode", "ContentNode")
     videoContent.url = selectedmediaitem.url
-    videoContent.streamformat = "mkv"   ''should be passed from top
+    videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine2)   ''should be passed from top
     videoContent.enableUI = true
 
     m.top.video.content = videoContent
     m.top.video.control = "prebuffer"
 
 end sub
+
+function getMediaStreamFormat(value as string) as string
+    if value = "video/x-matroska"
+        return "mkv"
+    else if value = "application/x-matroska" then
+        return "mkv"
+    else if value = "video/mp4" then
+        return "mp4"
+    else if value = "video/avi" then
+        return "mkv"
+    else if value = "video/x-m4v" then
+        return "mp4"
+    else if value = "hls" then
+        return "hls"
+    else
+        return "mkv"
+    end if
+end function
 
 function onKeyEvent(key as string,press as boolean) as boolean
     if press then

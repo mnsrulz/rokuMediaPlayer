@@ -89,6 +89,9 @@ function onKeyEvent(key as string,press as boolean) as boolean
         else if (key = "OK") then
             m.top.video.visible=true
             m.top.video.setFocus(true)
+            if (m.top.video.content.STREAMFORMAT = "hls")
+                m.top.video.seek = 9999999999
+            end if
             m.top.video.control = "play"
         end if
     end if

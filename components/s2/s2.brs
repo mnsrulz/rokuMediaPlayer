@@ -22,6 +22,14 @@ sub readpostergrid()
     end if
 end sub
 
+Function IsString(value As Dynamic) As Boolean
+    Return IsValid(value) And GetInterface(value, "ifString") <> invalid
+End Function
+
+Function IsValid(value As Dynamic) As Boolean
+    Return Type(value) <> "<uninitialized>" And value <> invalid
+End Function
+
 sub showpostergrid()
     resultAsJson = ParseJSON(m.readPosterGridTask.content)
     parsedContent = createObject("roSGNode", "ContentNode")
@@ -32,8 +40,12 @@ sub showpostergrid()
         gridPoster.Description = mediaItem.imdbInfo.plot
         sources = CreateObject("roArray", mediaItem.mediaSources.Count(), true)
         for each source in mediaItem.mediaSources
+            streamUrl = "http://apighost.herokuapp.com/api/gddirectstreamurl/" + source.id
+            if (IsString(source.streamUrl) And source.streamUrl <> "")
+                streamUrl = source.streamUrl
+            endif
             sources.push({
-                url : "http://apighost.herokuapp.com/api/gddirectstreamurl/" + source.id,
+                url : streamUrl,
                 bitrate : source.size
                 quality : false
                 contentid : source.source + "|" + source.mimeType

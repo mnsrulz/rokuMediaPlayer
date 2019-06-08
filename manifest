@@ -4,7 +4,7 @@ title=OverhangPanelSetScene Example
 subtitle=A Roku Scene Graph Development Example
 major_version=1
 minor_version=1
-build_version=2
+build_version=3
 
 mm_icon_focus_hd=pkg:/images/rsgde_mm_focus_hd.jpg
 

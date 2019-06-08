@@ -30,6 +30,18 @@ Function IsValid(value As Dynamic) As Boolean
     Return Type(value) <> "<uninitialized>" And value <> invalid
 End Function
 
+Function IsArray(value As Dynamic) As Boolean
+    Return IsValid(value) And GetInterface(value, "ifArray") <> invalid
+End Function
+
+function JoinStrArr(strArray as object, sep = "" as string) as string
+    joined = ""
+    for each s in strArray:
+        joined += sep + s
+    next
+    return joined.mid(len(sep))
+end function
+
 sub showpostergrid()
     resultAsJson = ParseJSON(m.readPosterGridTask.content)
     parsedContent = createObject("roSGNode", "ContentNode")
@@ -41,14 +53,18 @@ sub showpostergrid()
         sources = CreateObject("roArray", mediaItem.mediaSources.Count(), true)
         for each source in mediaItem.mediaSources
             streamUrl = "http://apighost.herokuapp.com/api/gddirectstreamurl/" + source.id
+            headerStrigify = ""
             if (IsString(source.streamUrl) And source.streamUrl <> "")
                 streamUrl = source.streamUrl
+            endif
+            if (IsArray(source.headers)) 
+                headerStrigify = JoinStrArr(source.headers, ";")
             endif
             sources.push({
                 url : streamUrl,
                 bitrate : source.size
                 quality : false
-                contentid : source.source + "|" + source.mimeType
+                contentid : source.source + "|" + source.mimeType + "|" + headerStrigify
             })
         end for
         gridPoster.Streams = sources

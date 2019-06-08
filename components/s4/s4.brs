@@ -18,7 +18,8 @@ sub readmediaitem()
         ContentNode_child_object = ContentNode_object.createChild("ContentNode")
         ContentNode_child_object.title = categoryKey.contentid
         ContentNode_child_object.url = categoryKey.url
-        ContentNode_child_object.ShortDescriptionLine2 = categoryKey.contentid.Split("|")[1]
+        ContentNode_child_object.ShortDescriptionLine1 = categoryKey.contentid.Split("|")[1]
+        ContentNode_child_object.ShortDescriptionLine2 = categoryKey.contentid.Split("|")[2]
         print categoryKey.displayName
     end for
 
@@ -51,7 +52,8 @@ sub preloadmedia()
 
     videoContent = createObject("RoSGNode", "ContentNode")
     videoContent.url = selectedmediaitem.url
-    videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine2)   ''should be passed from top
+    videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1)   ''should be passed from top
+    videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
     videoContent.enableUI = true
 
     m.top.video.content = videoContent
@@ -75,6 +77,14 @@ function getMediaStreamFormat(value as string) as string
     else
         return "mkv"
     end if
+end function
+
+function getMediaStreamHeaders(headers as string) as object
+    headersasarray = []
+    for each header in headers.Split(";")
+        headersasarray.push(header)
+    end for
+    return headersasarray
 end function
 
 function onKeyEvent(key as string,press as boolean) as boolean

@@ -54,7 +54,7 @@ sub readmediaitem()
         print "setting to execution of category load task"
         m.LoadTask.control = "RUN"
     end if
-    ' m.list.observeField("itemFocused", "preloadmedia")
+    m.list.observeField("itemFocused", "preloadmedia")
     m.mediaTitle.text = currentitem.shortdescriptionline1
     m.mediaDesc.text = currentitem.DESCRIPTION
 end sub
@@ -94,16 +94,17 @@ end sub
 
 sub preloadmedia()
     selectedmediaitem = m.list.content.getChild(m.list.itemFocused)
+    if selectedmediaitem <> invalid
+        videoContent = createObject("RoSGNode", "ContentNode")
+        videoContent.url = selectedmediaitem.url
+        m.mediaTitle.text = selectedmediaitem.title
+        videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
+        videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
+        ' videoContent.enableUI = true
 
-    videoContent = createObject("RoSGNode", "ContentNode")
-    videoContent.url = selectedmediaitem.url
-    videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
-    videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
-    ' videoContent.enableUI = true
-
-    m.top.video.content = videoContent
-    m.top.video.control = "prebuffer"
-
+        m.top.video.content = videoContent
+        m.top.video.control = "prebuffer"
+    end if
 end sub
 
 function getMediaStreamFormat(value as string) as string

@@ -47,32 +47,42 @@ sub showpostergrid()
     parsedContent = createObject("roSGNode", "ContentNode")
     for each mediaItem in resultAsJson.items
         gridPoster = createObject("roSGNode", "ContentNode")
-        gridPoster.imdbId = mediaItem.imdbInfo.id
+        ' gridPoster.imdbId = mediaItem.imdbInfo.id
         gridPoster.shortdescriptionline1 = mediaItem.imdbInfo.title
         gridPoster.Description = mediaItem.imdbInfo.plot
-        sources = CreateObject("roArray", mediaItem.mediaSources.Count(), true)
-        for each source in mediaItem.mediaSources
-            streamUrl = "http://apighost.herokuapp.com/api/gddirectstreamurl/" + source.id
-            headerStrigify = ""
-            if (IsString(source.streamUrl) And source.streamUrl <> "")
-                streamUrl = source.streamUrl
-            endif
-            if (IsArray(source.headers)) 
-                headerStrigify = JoinStrArr(source.headers, ";")
-            endif
-            sources.push({
-                url : streamUrl,
-                bitrate : source.size
-                quality : false
-                contentid : source.source + "|" + source.mimeType + "|" + headerStrigify
-            })
-        end for
-        gridPoster.Streams = sources
-        basePoster = Left(mediaItem.imdbInfo.poster, lastIndexOf(mediaItem.imdbInfo.poster, "@"))
-        gridPoster.shortdescriptionline2 = mediaItem.mediaSources[0].id
-        gridPoster.SDPosterUrl = basePoster + "._V1_UX182_CR0,0,182,268_AL_.jpg"
-        gridPoster.HDPosterUrl = basePoster + "._V1_UX182_CR0,0,182,268_AL_.jpg"
-        gridPoster.Url = basePoster + "._V1_UX388_CR0,0,388,512_AL_.jpg"
+        if IsString(mediaItem.mediaSourceUrl)
+            ' sources = CreateObject("roArray", 1, true)
+            ' sources.push(mediaItem.mediaSourceUrl)
+            ' gridPoster.StreamUrls = sources
+            gridPoster.SDPosterUrl = mediaItem.imdbInfo.poster
+            gridPoster.HDPosterUrl = mediaItem.imdbInfo.poster
+            gridPoster.Url = "http://mediacatalogadmin.herokuapp.com" + mediaItem.mediaSourceUrl
+        else
+            sources = CreateObject("roArray", mediaItem.mediaSources.Count(), true)
+            for each source in mediaItem.mediaSources
+                streamUrl = "http://apighost.herokuapp.com/api/gddirectstreamurl/" + source.id
+                headerStrigify = ""
+                if (IsString(source.streamUrl) And source.streamUrl <> "")
+                    streamUrl = source.streamUrl
+                endif
+                if (IsArray(source.headers)) 
+                    headerStrigify = JoinStrArr(source.headers, ";")
+                endif
+                sources.push({
+                    url : streamUrl,
+                    bitrate : source.size
+                    quality : false
+                    contentid : source.source + "|" + source.mimeType + "|" + headerStrigify
+                })
+            end for
+            gridPoster.Streams = sources
+            basePoster = Left(mediaItem.imdbInfo.poster, lastIndexOf(mediaItem.imdbInfo.poster, "@"))
+            gridPoster.shortdescriptionline2 = mediaItem.mediaSources[0].id
+            gridPoster.SDPosterUrl = basePoster + "._V1_UX182_CR0,0,182,268_AL_.jpg"
+            gridPoster.HDPosterUrl = basePoster + "._V1_UX182_CR0,0,182,268_AL_.jpg"
+            gridPoster.Url = basePoster + "._V1_UX388_CR0,0,388,512_AL_.jpg"
+        endif
+        
         parsedContent.appendChild(gridPoster)
     end for
     m.top.grid.content = parsedContent

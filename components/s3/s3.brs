@@ -13,7 +13,7 @@ end sub
 
 sub readmediaitem()
     currentitem = m.top.mediaItem
-    m.poster.uri = currentitem.Url
+    m.poster.uri = currentitem.HDPosterUrl
     m.mediaTitle.text = currentitem.shortdescriptionline1
 end sub
 

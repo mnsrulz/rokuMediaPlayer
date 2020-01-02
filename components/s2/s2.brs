@@ -54,8 +54,8 @@ sub showpostergrid()
             ' sources = CreateObject("roArray", 1, true)
             ' sources.push(mediaItem.mediaSourceUrl)
             ' gridPoster.StreamUrls = sources
-            gridPoster.SDPosterUrl = mediaItem.imdbInfo.poster
-            gridPoster.HDPosterUrl = mediaItem.imdbInfo.poster
+            gridPoster.SDPosterUrl = "http://mediacatalogadmin.herokuapp.com" + mediaItem.imdbInfo.posterThumb
+            gridPoster.HDPosterUrl = "http://mediacatalogadmin.herokuapp.com" + mediaItem.imdbInfo.posterThumb
             gridPoster.Url = "http://mediacatalogadmin.herokuapp.com" + mediaItem.mediaSourceUrl
         else
             sources = CreateObject("roArray", mediaItem.mediaSources.Count(), true)

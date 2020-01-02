@@ -4,7 +4,7 @@ sub init()
     m.top.hasNextPanel = false
     m.top.leftPosition = 130
     m.top.createNextPanelOnItemFocus = false
-    m.list = m.top.findNode("mediaSourceList")
+    m.lstMediaSources = m.top.findNode("mediaSourceList")
     m.mediaTitle = m.top.findNode("mediaTitle")
     m.mediaDesc = m.top.findNode("mediaDesc")
 end sub
@@ -24,7 +24,7 @@ end function
 
 sub readmediaitem()
     ContentNode_object = createObject("RoSGNode", "ContentNode")
-    m.list.content = ContentNode_object
+    m.lstMediaSources.content = ContentNode_object
 
     currentitem = m.top.mediaItem
     if IsString(currentitem.url)
@@ -34,11 +34,11 @@ sub readmediaitem()
         ContentNode_child_object.ShortDescriptionLine1 = ""
         ContentNode_child_object.ShortDescriptionLine2 = ""
 
-        m.LoadTask = CreateObject("roSGNode", "SimpleTask")
-        m.LoadTask.uri = currentitem.url
-        m.LoadTask.observeField("content", "loadmediaitems")
+        m.LoadMediaItemsTask = CreateObject("roSGNode", "SimpleTask")
+        m.LoadMediaItemsTask.uri = currentitem.url
+        m.LoadMediaItemsTask.observeField("content", "loadmediaitems")
         print "setting to execution of loading media items load task"
-        m.LoadTask.control = "RUN"
+        m.LoadMediaItemsTask.control = "RUN"
     else
         for each categoryKey in currentitem.Streams
             ContentNode_child_object = ContentNode_object.createChild("ContentNode")
@@ -48,35 +48,35 @@ sub readmediaitem()
             ContentNode_child_object.ShortDescriptionLine2 = categoryKey.contentid.Split("|")[2]
             print categoryKey.displayName
         end for
-        m.LoadTask = CreateObject("roSGNode", "SimpleTask")
-        m.LoadTask.uri = "http://mediacatalogadmin.herokuapp.com/api/playlist"
-        m.LoadTask.observeField("content", "fakeEvent")
+        m.LoadMediaItemsTask = CreateObject("roSGNode", "SimpleTask")
+        m.LoadMediaItemsTask.uri = "http://jsonplaceholder.typicode.com/todos/1"
+        m.LoadMediaItemsTask.observeField("content", "fakeEvent")
         print "setting to execution of category load task"
-        m.LoadTask.control = "RUN"
+        m.LoadMediaItemsTask.control = "RUN"
     end if
-    m.list.observeField("itemFocused", "preloadmedia")
+    m.lstMediaSources.observeField("itemFocused", "preloadmedia")
     m.mediaTitle.text = currentitem.shortdescriptionline1
     m.mediaDesc.text = currentitem.DESCRIPTION
 end sub
 
 sub readRandom()
-    m.LoadTask = CreateObject("roSGNode", "SimpleTask")
-    m.LoadTask.uri = "http://mediacatalogadmin.herokuapp.com/api/playlist"
-    m.LoadTask.observeField("content", "fakeEvent")
-    print "setting to execution of category load task"
-    m.LoadTask.control = "RUN"
+    m.FakeEventTask = CreateObject("roSGNode", "SimpleTask")
+    m.FakeEventTask.uri = "http://jsonplaceholder.typicode.com/todos/1"
+    m.FakeEventTask.observeField("content", "fakeEvent")
+    print "setting up fake event task"
+    m.FakeEventTask.control = "RUN"
 end sub
 
 sub fakeEvent()
-    m.list.setFocus(true)
+    m.lstMediaSources.setFocus(true)
 end sub
 
 sub loadmediaitems()
     print "Loading media sources..."
-    resultAsJson = ParseJSON(m.LoadTask.content)
+    resultAsJson = ParseJSON(m.LoadMediaItemsTask.content)
     ContentNode_object = createObject("RoSGNode", "ContentNode")
     if resultAsJson <> invalid
-        m.list.content = ContentNode_object
+        m.lstMediaSources.content = ContentNode_object
         for each categoryKey in resultAsJson.items
             ContentNode_child_object = ContentNode_object.createChild("ContentNode")
             ContentNode_child_object.title = categoryKey.title
@@ -86,25 +86,33 @@ sub loadmediaitems()
             print categoryKey.title
         end for
     else
-        m.list.content[0].title = "Error... please try again"
+        m.lstMediaSources.content = ContentNode_object
+        ContentNode_child_object = ContentNode_object.createChild("ContentNode")
+        ContentNode_child_object.title = "Error... please try again"
     end if
-    m.list.setFocus(true)
+    m.lstMediaSources.setFocus(true)
 end sub
 
 
 sub preloadmedia()
-    selectedmediaitem = m.list.content.getChild(m.list.itemFocused)
-    if selectedmediaitem <> invalid
-        videoContent = createObject("RoSGNode", "ContentNode")
-        videoContent.url = selectedmediaitem.url
-        m.mediaTitle.text = selectedmediaitem.title
-        videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
-        videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
-        ' videoContent.enableUI = true
-
-        m.top.video.content = videoContent
-        m.top.video.control = "prebuffer"
+    selectedmediaitem = m.lstMediaSources.content.getChild(m.lstMediaSources.itemFocused)
+    previousvideocontenturl = ""
+    if m.top.video.content <> invalid
+        previousvideocontenturl = m.top.video.content.url
     end if
+    if selectedmediaitem <> invalid
+        if previousvideocontenturl <> selectedmediaitem.url
+            videoContent = createObject("RoSGNode", "ContentNode")
+            videoContent.url = selectedmediaitem.url
+            m.mediaTitle.text = selectedmediaitem.title
+            videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
+            videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
+            ' videoContent.enableUI = true
+            m.top.video.content = videoContent
+            m.top.video.control = "prebuffer"
+        end if
+    end if
+
 end sub
 
 function getMediaStreamFormat(value as string) as string

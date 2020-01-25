@@ -21,13 +21,13 @@
                 width="388"
                 wrap = "true"
                 Lines = "2" 
-                font = "font:MediumBoldSystemFont" />
+                font = "font:MediumSystemFont" />
             <Label 
                 id = "mediaDesc" 
                 width="388"
                 wrap = "true" 
-                maxLines = "4"
-                font = "font:SmallestSystemFont" />
+                maxLines = "2"
+                font = "font:SmallSystemFont" />
 
         </LayoutGroup>
         <!-- <Label id = "myLabel"

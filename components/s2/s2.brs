@@ -22,17 +22,17 @@ sub readpostergrid()
     end if
 end sub
 
-Function IsString(value As Dynamic) As Boolean
-    Return IsValid(value) And GetInterface(value, "ifString") <> invalid
-End Function
+function IsString(value as dynamic) as boolean
+    return IsValid(value) and GetInterface(value, "ifString") <> invalid
+end function
 
-Function IsValid(value As Dynamic) As Boolean
-    Return Type(value) <> "<uninitialized>" And value <> invalid
-End Function
+function IsValid(value as dynamic) as boolean
+    return Type(value) <> "<uninitialized>" and value <> invalid
+end function
 
-Function IsArray(value As Dynamic) As Boolean
-    Return IsValid(value) And GetInterface(value, "ifArray") <> invalid
-End Function
+function IsArray(value as dynamic) as boolean
+    return IsValid(value) and GetInterface(value, "ifArray") <> invalid
+end function
 
 function JoinStrArr(strArray as object, sep = "" as string) as string
     joined = ""
@@ -47,27 +47,30 @@ sub showpostergrid()
     parsedContent = createObject("roSGNode", "ContentNode")
     for each mediaItem in resultAsJson.items
         gridPoster = createObject("roSGNode", "ContentNode")
-        ' gridPoster.imdbId = mediaItem.imdbInfo.id
+        gridPoster.id = mediaItem.imdbInfo.id
         gridPoster.shortdescriptionline1 = mediaItem.imdbInfo.title
         gridPoster.Description = mediaItem.imdbInfo.plot
         if IsString(mediaItem.mediaSourceUrl)
-            ' sources = CreateObject("roArray", 1, true)
-            ' sources.push(mediaItem.mediaSourceUrl)
-            ' gridPoster.StreamUrls = sources
-            gridPoster.SDPosterUrl = "http://mediacatalogadmin.herokuapp.com" + mediaItem.imdbInfo.posterThumb
-            gridPoster.HDPosterUrl = "http://mediacatalogadmin.herokuapp.com" + mediaItem.imdbInfo.posterThumb
-            gridPoster.Url = "http://mediacatalogadmin.herokuapp.com" + mediaItem.mediaSourceUrl
+            ' gridPoster.SDPosterUrl = "http://mediacatalogadmin.herokuapp.com" + mediaItem.imdbInfo.posterThumb
+            ' gridPoster.HDPosterUrl = "http://mediacatalogadmin.herokuapp.com" + mediaItem.imdbInfo.posterThumb
+            gridPoster.SDPosterUrl = mediaItem.imdbInfo.posterThumb
+            gridPoster.HDPosterUrl = mediaItem.imdbInfo.posterThumb
+            gridPoster.Url = mediaItem.imdbInfo.posterHD
+
+            sources = CreateObject("roArray", 1, true)
+            sources.push("http://mediacatalogadmin.herokuapp.com" + mediaItem.mediaSourceUrl)
+            gridPoster.StreamContentIDs = sources
         else
             sources = CreateObject("roArray", mediaItem.mediaSources.Count(), true)
             for each source in mediaItem.mediaSources
                 streamUrl = "http://apighost.herokuapp.com/api/gddirectstreamurl/" + source.id
                 headerStrigify = ""
-                if (IsString(source.streamUrl) And source.streamUrl <> "")
+                if (IsString(source.streamUrl) and source.streamUrl <> "")
                     streamUrl = source.streamUrl
-                endif
-                if (IsArray(source.headers)) 
+                end if
+                if (IsArray(source.headers))
                     headerStrigify = JoinStrArr(source.headers, ";")
-                endif
+                end if
                 sources.push({
                     url : streamUrl,
                     bitrate : source.size
@@ -76,13 +79,16 @@ sub showpostergrid()
                 })
             end for
             gridPoster.Streams = sources
-            basePoster = Left(mediaItem.imdbInfo.poster, lastIndexOf(mediaItem.imdbInfo.poster, "@"))
             gridPoster.shortdescriptionline2 = mediaItem.mediaSources[0].id
-            gridPoster.SDPosterUrl = basePoster + "._V1_UX182_CR0,0,182,268_AL_.jpg"
-            gridPoster.HDPosterUrl = basePoster + "._V1_UX182_CR0,0,182,268_AL_.jpg"
-            gridPoster.Url = basePoster + "._V1_UX388_CR0,0,388,512_AL_.jpg"
-        endif
-        
+            ' basePoster = Left(mediaItem.imdbInfo.poster, lastIndexOf(mediaItem.imdbInfo.poster, "@"))
+            ' gridPoster.SDPosterUrl = basePoster + "._V1_UX182_CR0,0,182,268_AL_.jpg"
+            ' gridPoster.HDPosterUrl = basePoster + "._V1_UX182_CR0,0,182,268_AL_.jpg"
+            ' gridPoster.Url = basePoster + "._V1_UX388_CR0,0,388,512_AL_.jpg"
+            gridPoster.SDPosterUrl = mediaItem.imdbInfo.posterThumb
+            gridPoster.HDPosterUrl = mediaItem.imdbInfo.posterThumb
+            gridPoster.Url = mediaItem.imdbInfo.posterHD
+        end if
+
         parsedContent.appendChild(gridPoster)
     end for
     m.top.grid.content = parsedContent

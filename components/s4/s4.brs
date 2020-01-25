@@ -27,15 +27,15 @@ sub readmediaitem()
     m.lstMediaSources.content = ContentNode_object
 
     currentitem = m.top.mediaItem
-    if IsString(currentitem.url)
+    if IsValid(currentitem.StreamContentIDs)
         ContentNode_child_object = ContentNode_object.createChild("ContentNode")
         ContentNode_child_object.title = "Loading media items"
         ContentNode_child_object.url = ""
         ContentNode_child_object.ShortDescriptionLine1 = ""
         ContentNode_child_object.ShortDescriptionLine2 = ""
-
+        ' urltowatch = currentitem.StreamContentIDs[0]
         m.LoadMediaItemsTask = CreateObject("roSGNode", "SimpleTask")
-        m.LoadMediaItemsTask.uri = currentitem.url
+        m.LoadMediaItemsTask.uri = currentitem.StreamContentIDs[0]
         m.LoadMediaItemsTask.observeField("content", "loadmediaitems")
         print "setting to execution of loading media items load task"
         m.LoadMediaItemsTask.control = "RUN"

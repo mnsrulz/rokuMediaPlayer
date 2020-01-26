@@ -7,6 +7,7 @@ sub init()
     m.lstMediaSources = m.top.findNode("mediaSourceList")
     m.mediaTitle = m.top.findNode("mediaTitle")
     m.mediaDesc = m.top.findNode("mediaDesc")
+    m.mediaFileName = m.top.findNode("mediaFileName")
 end sub
 
 function IsString(value as dynamic) as boolean
@@ -27,7 +28,7 @@ sub readmediaitem()
     m.lstMediaSources.content = ContentNode_object
 
     currentitem = m.top.mediaItem
-    if IsValid(currentitem.StreamContentIDs)
+    if currentitem.StreamContentIDs.Count() > 0
         ContentNode_child_object = ContentNode_object.createChild("ContentNode")
         ContentNode_child_object.title = "Loading media items"
         ContentNode_child_object.url = ""
@@ -57,6 +58,7 @@ sub readmediaitem()
     m.lstMediaSources.observeField("itemFocused", "preloadmedia")
     m.mediaTitle.text = currentitem.shortdescriptionline1
     m.mediaDesc.text = currentitem.DESCRIPTION
+    m.mediaFileName.text = ""
 end sub
 
 sub readRandom()
@@ -104,7 +106,7 @@ sub preloadmedia()
         if previousvideocontenturl <> selectedmediaitem.url
             videoContent = createObject("RoSGNode", "ContentNode")
             videoContent.url = selectedmediaitem.url
-            m.mediaTitle.text = selectedmediaitem.title
+            m.mediaFileName.text = selectedmediaitem.title
             videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
             videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
             ' videoContent.enableUI = true

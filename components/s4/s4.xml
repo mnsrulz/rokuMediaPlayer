@@ -20,13 +20,18 @@
                 wrap = "true"
                 Lines = "2" 
                 font = "font:MediumBoldSystemFont" />
-            <LabelList id = "mediaSourceList" itemSize="[512, 32]">
+            <LabelList id = "mediaSourceList" itemSize="[512, 32]" numRows="6">
                 <ContentNode role = "content">
                     <ContentNode title = "Anythin" />
                     <ContentNode title = "Choose" />
                     <ContentNode title = "Play" />
                 </ContentNode>
             </LabelList>
+            <Label 
+                id = "mediaFileName" width="645"
+                wrap = "true"
+                Lines = "2" 
+                font = "font:SmallSystemFont" />
             <Label 
                 id = "mediaDesc" width="645"
                 wrap = "true" 

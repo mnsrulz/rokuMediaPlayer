@@ -30,13 +30,14 @@ end sub
 sub readImdbInfo()
     print "Imdb Info loaded..."
     resultAsJson = ParseJSON(m.ReadMediaImdbInfoTask.content)
-    ContentNode_object = createObject("RoSGNode", "ContentNode")
     if resultAsJson <> invalid
-        m.mediaDesc.text = resultAsJson.runtime + " | " + "Imdb: " + resultAsJson.rating
-    else
-        ' m.lstMediaSources.content = ContentNode_object
-        ' ContentNode_child_object = ContentNode_object.createChild("ContentNode")
-        ' ContentNode_child_object.title = "Error... please try again"
+        if resultAsJson.runtime <> invalid and resultAsJson.rating <> invalid
+            m.mediaDesc.text = resultAsJson.runtime + " | " + "Imdb: " + resultAsJson.rating
+        else if resultAsJson.runtime <> invalid
+            m.mediaDesc.text = resultAsJson.runtime
+        else if resultAsJson.rating <> invalid
+            m.mediaDesc.text = "Imdb: " + resultAsJson.rating
+        end if
     end if
 end sub
 
@@ -45,9 +46,11 @@ sub readPosterMode()
         m.poster.width = "388"
         m.poster.height = "512"
         m.mediaTitle.visible = false
+        m.mediaDesc.visible = false
     else
         m.poster.width = "288"
         m.poster.height = "428"
         m.mediaTitle.visible = true
+        m.mediaDesc.visible = true
     end if
 end sub

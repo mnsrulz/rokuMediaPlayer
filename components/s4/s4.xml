@@ -6,7 +6,7 @@
     <interface>
         <field id="video" type="node" />
         <field id="mediaItem" type="node" onChange = "readmediaitem" />
-        <field id="random" type="string" onChange="readRandom" />
+        <field id="lastFocusNode" type="node" />
     </interface>
     <script type = "text/brightscript" uri = "pkg:/components/s4/s4.brs"/>
 
@@ -14,11 +14,10 @@
         <LayoutGroup 
             id = "layoutgroup4" 
             translation = "[ 0, 40 ]" 
-            color = "0x101010C0" itemSpacings = "[8]">
+            itemSpacings = "[8]">
             <Label 
                 id = "mediaTitle" width="645"
                 wrap = "true"
-                Lines = "2" 
                 font = "font:MediumBoldSystemFont" />
             <LabelList id = "mediaSourceList" itemSize="[512, 32]" numRows="6">
                 <ContentNode role = "content">
@@ -29,8 +28,8 @@
             </LabelList>
             <Label 
                 id = "mediaFileName" width="645"
+                maxLines = "2"
                 wrap = "true"
-                Lines = "2" 
                 font = "font:SmallSystemFont" />
             <Label 
                 id = "mediaDesc" width="645"

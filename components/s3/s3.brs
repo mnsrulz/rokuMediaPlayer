@@ -4,7 +4,7 @@ sub init()
     m.top.focusable = true
     m.top.hasNextPanel = true
     'm.top.leftPosition = 130
-    m.top.createNextPanelOnItemFocus = false
+    ' m.top.createNextPanelOnItemFocus = false
     m.top.optionsAvailable = false
     m.top.goBackCount = 2
     m.mediaTitle = m.top.findNode("mediaTitle")
@@ -38,6 +38,8 @@ sub readImdbInfo()
         else if resultAsJson.rating <> invalid
             m.mediaDesc.text = "Imdb: " + resultAsJson.rating
         end if
+    else
+        print "Imdb info parse result failed"
     end if
 end sub
 

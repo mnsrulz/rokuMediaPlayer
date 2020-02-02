@@ -1,10 +1,10 @@
 '********** Copyright 2016 Roku Corp.  All Rights Reserved. **********
 
-title=OverhangPanelSetScene Example
-subtitle=A Roku Scene Graph Development Example
+title=Simple Roku Media Player
+subtitle=A Simple Roku Media Player
 major_version=1
-minor_version=3
-build_version=2
+minor_version=4
+build_version=1
 
 mm_icon_focus_hd=pkg:/images/rsgde_mm_focus_hd.jpg
 

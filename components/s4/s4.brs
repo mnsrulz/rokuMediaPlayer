@@ -3,7 +3,6 @@ sub init()
     m.top.focusable = true
     m.top.hasNextPanel = false
     m.top.leftPosition = 130
-    m.top.createNextPanelOnItemFocus = false
     m.lstMediaSources = m.top.findNode("mediaSourceList")
     m.mediaTitle = m.top.findNode("mediaTitle")
     m.mediaDesc = m.top.findNode("mediaDesc")
@@ -49,28 +48,15 @@ sub readmediaitem()
             ContentNode_child_object.ShortDescriptionLine2 = categoryKey.contentid.Split("|")[2]
             print categoryKey.displayName
         end for
-        m.LoadMediaItemsTask = CreateObject("roSGNode", "SimpleTask")
-        m.LoadMediaItemsTask.uri = "http://jsonplaceholder.typicode.com/todos/1"
-        m.LoadMediaItemsTask.observeField("content", "fakeEvent")
-        print "setting to execution of category load task"
-        m.LoadMediaItemsTask.control = "RUN"
+        m.lstMediaSources.setFocus(true)
     end if
     m.lstMediaSources.observeField("itemFocused", "preloadmedia")
+    m.lstMediaSources.observeField("itemSelected", "itemselected")
+    m.top.video.observeField("state", "controlvideoplay")
+
     m.mediaTitle.text = currentitem.shortdescriptionline1
     m.mediaDesc.text = currentitem.DESCRIPTION
     m.mediaFileName.text = ""
-end sub
-
-sub readRandom()
-    m.FakeEventTask = CreateObject("roSGNode", "SimpleTask")
-    m.FakeEventTask.uri = "http://jsonplaceholder.typicode.com/todos/1"
-    m.FakeEventTask.observeField("content", "fakeEvent")
-    print "setting up fake event task"
-    m.FakeEventTask.control = "RUN"
-end sub
-
-sub fakeEvent()
-    m.lstMediaSources.setFocus(true)
 end sub
 
 sub loadmediaitems()
@@ -97,6 +83,7 @@ end sub
 
 
 sub preloadmedia()
+    print "Preloading media"
     selectedmediaitem = m.lstMediaSources.content.getChild(m.lstMediaSources.itemFocused)
     previousvideocontenturl = ""
     if m.top.video.content <> invalid
@@ -109,7 +96,6 @@ sub preloadmedia()
             m.mediaFileName.text = selectedmediaitem.title
             videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
             videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
-            ' videoContent.enableUI = true
             m.top.video.content = videoContent
             m.top.video.control = "prebuffer"
         end if
@@ -143,23 +129,30 @@ function getMediaStreamHeaders(headers as string) as object
     return headersasarray
 end function
 
-function onKeyEvent(key as string, press as boolean) as boolean
-    if press then
-        if key = "back"
-            if (m.top.video.state = "playing")
-                m.top.video.control = "stop"
-                'm.videolist.setFocus(true)
-                m.top.video.visible = false
-                return true
-            end if
-        else if (key = "OK") then
-            m.top.video.visible = true
-            m.top.video.setFocus(true)
-            if (m.top.video.content.STREAMFORMAT = "hls")
-                m.top.video.seek = 9999999999
-            end if
-            m.top.video.control = "play"
-        end if
+sub itemselected()
+    m.top.video.visible = true
+    m.top.video.setFocus(true)
+    if (m.top.video.content.STREAMFORMAT = "hls")
+        m.top.video.seek = 9999999999
     end if
-    return false
-end function
+    m.top.video.control = "play"
+    m.top.lastFocusNode = m.lstMediaSources
+end sub
+
+sub controlvideoplay()
+    print m.top.video.state
+    if (m.top.video.state = "finished") then
+        m.top.video.control = "stop"
+        m.top.video.visible = false
+        m.lstMediaSources.setFocus(true)
+    else if (m.top.video.state = "buffering") then
+        currentplayitem = m.top.video
+    else if(m.top.video.state = "error") then
+        ' itemfocusednow = m.lstMediaSources.itemFocused
+        ' selectedmediaitem = m.lstMediaSources.content.getChild(itemfocusednow)
+        ' selectedmediaitem.title = "ERROR READING SOURCE"
+        m.lstMediaSources.setFocus(true)
+    end if
+end sub
+
+

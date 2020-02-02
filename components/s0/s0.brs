@@ -5,9 +5,8 @@ sub init()
     m.top.appendChild(oh)
     m.Overhang = oh
 
-    ps =  createObject("roSGNode", "PanelSet")
-    m.top.appendChild(ps)
-    m.panelSet = ps
+    m.panelSet =  createObject("roSGNode", "PanelSet")
+    m.top.appendChild(m.panelSet)
 
     oh.showOptions = true
     loadCategories()
@@ -19,29 +18,16 @@ sub initVideoPlayer()
     m.video = createObject("roSGNode", "Video")
     m.video.visible = false
     m.top.appendChild(m.video)
-    m.video.observeField("state","controlvideoplay")
-end sub
-
-sub controlvideoplay()
-    print m.video.state
-    if (m.video.state = "finished") then
-        m.video.control = "stop"
-        'm.videolist.setFocus(true)
-        m.video.visible = false
-    else if(m.video.state = "error") then
-        m.listpanel4.random = RND(999999)
-    end if
 end sub
 
 function onKeyEvent(key as string,press as boolean) as boolean
+    ' This event is an overhead, but we have live with it. 
     if press then
         if key = "back"
-            if (m.video.state = "playing")
+            if (m.video.visible)
                 m.video.control = "stop"
-                'm.videolist.setFocus(true)
                 m.video.visible = false
-                m.listpanel4.random = RND(999999)
-                ''m.listpanel4.setFocus(true)
+                m.mediaSourcesPanel.lastFocusNode.setFocus(true)
                 return true
             end if
         end if
@@ -80,46 +66,36 @@ end sub
 sub showcategorymedia()
     categorycontent = m.categoriespanel.list.content.getChild(m.categoriespanel.list.itemFocused)
     m.gridPanel.categoryKey = categorycontent.ShortDescriptionLine1
+    m.Overhang.title = categorycontent.title
 end sub
 
 sub setpanels()
     m.categoriespanel = m.panelSet.createChild("s1")
     m.gridPanel = m.panelSet.createChild("s2")
-    m.listpanel3 = createObject("RoSGNode","s3")
-    m.listpanel4 = createObject("RoSGNode", "s4")
-    m.listpanel4.video = m.video
-
-    m.listpanel3.topcontainer = m.top
-    m.listpanel3.gridPanel = m.gridPanel
     m.gridPanel.grid.observeField("itemFocused", "showCurrentSelectedMediaInfo")
-    m.gridPanel.observeField("focusedChild", "slidepanels")
-    m.listpanel3.observeField("focusedChild", "slidepanels1")
 end sub
 
 sub showCurrentSelectedMediaInfo()
     currentSelectedMediaItem = m.gridPanel.grid.content.getChild(m.gridPanel.grid.itemFocused)
-    m.Overhang.title = currentSelectedMediaItem.shortdescriptionline1
-    m.listpanel3.mediaItem = currentSelectedMediaItem
+    
+    m.posterPanel = createObject("RoSGNode","s3")
+    m.posterPanel.mediaItem = currentSelectedMediaItem
+    m.gridPanel.nextPanel = m.posterPanel
+    m.posterPanel.observeField("focusedChild", "onFucusPosterPanel")
     print "selection changed"
 end sub
 
-sub slidepanels()
+sub onFucusPosterPanel()
     if not m.panelSet.isGoingBack
-        if m.panelSet.leftPanelIndex = 0 then
-            m.panelSet.appendChild(m.listpanel3)
-        end if
+        m.posterPanel.posterMode = "full"
+        mediaSourcesPanel = createObject("RoSGNode", "s4")
+        mediaSourcesPanel.video = m.video
+        m.mediaSourcesPanel = mediaSourcesPanel
+        m.panelSet.appendChild(mediaSourcesPanel)
+        currentSelectedMediaItem = m.gridPanel.grid.content.getChild(m.gridPanel.grid.itemFocused)
+        mediaSourcesPanel.mediaItem = currentSelectedMediaItem
+        m.mediaSourcesPanel.setFocus(true)
     else
-        m.listpanel3.posterMode = "normal"
-        m.gridPanel.setFocus(true)
-    end if
-end sub
-
-sub slidepanels1()
-    if not m.panelSet.isGoingBack
-        if m.panelSet.leftPanelIndex = 1 then
-            m.listpanel3.posterMode = "full"
-            m.panelSet.appendChild(m.listpanel4)
-            m.listpanel4.mediaItem = m.listpanel3.mediaItem
-        end if
+        m.posterPanel.posterMode = ""
     end if
 end sub

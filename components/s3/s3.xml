@@ -14,13 +14,12 @@
         <LayoutGroup 
             id = "infoRectangle" 
             translation = "[ 0, 44 ]" 
-            color = "0x101010C0" itemSpacings = "[8]">
+             itemSpacings = "[8]">
             <Poster id="mediaposter" width="288" height="428" />
             <Label 
                 id = "mediaTitle" 
                 width="388"
                 wrap = "true"
-                Lines = "2" 
                 font = "font:MediumSystemFont" />
             <Label 
                 id = "mediaDesc" 

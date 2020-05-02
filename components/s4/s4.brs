@@ -69,8 +69,11 @@ sub loadmediaitems()
             ContentNode_child_object = ContentNode_object.createChild("ContentNode")
             ContentNode_child_object.title = categoryKey.title
             ContentNode_child_object.url = categoryKey.streamUrl
-            ContentNode_child_object.ShortDescriptionLine1 = categoryKey.title
-            ContentNode_child_object.ShortDescriptionLine2 = categoryKey.title
+            ContentNode_child_object.ShortDescriptionLine1 = categoryKey.mimeType
+            if categoryKey.referer <> invalid
+                ContentNode_child_object.ShortDescriptionLine2 = categoryKey.referer
+            end if
+            ' ContentNode_child_object.ShortDescriptionLine2 = categoryKey.title
             print categoryKey.title
         end for
     else
@@ -95,7 +98,18 @@ sub preloadmedia()
             videoContent.url = selectedmediaitem.url
             m.mediaFileName.text = selectedmediaitem.title
             videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
-            videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
+            ' videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
+
+            'need to relook , try to pass collection from top or from api
+            httpAgent = CreateObject("roHttpAgent")
+            httpAgent.AddHeader("Referer", selectedmediaitem.ShortDescriptionLine2)
+
+            if left(selectedmediaitem.url, 6) = "https:"
+                httpAgent.SetCertificatesFile("common:/certs/ca-bundle.crt")
+                ' httpAgent.AddHeader("X-Roku-Reserved-Dev-Id", "")
+            end if
+            m.top.video.setHttpAgent(httpAgent)
+
             m.top.video.content = videoContent
             m.top.video.control = "prebuffer"
         end if

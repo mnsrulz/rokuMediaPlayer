@@ -1,21 +1,21 @@
 '********** Copyright 2016 Roku Corp.  All Rights Reserved. **********
 
-title=Simple Roku Media Player
-subtitle=A Simple Roku Media Player
-major_version=1
-minor_version=4
+title=Google Drive for Roku
+subtitle=Google Drive for Roku
+major_version=0
+minor_version=1
 build_version=1
 
-mm_icon_focus_hd=pkg:/images/rsgde_mm_focus_hd.jpg
+mm_icon_focus_hd=pkg:/images/logo.jpg
 
-mm_icon_focus_sd=pkg:/images/rde_mm_focus_sd.png
+mm_icon_focus_sd=pkg:/images/logo.png
 
 
-splash_screen_sd=pkg:/images/rde_splash_sd.jpg
+splash_screen_sd=pkg:/images/logo.jpg
 
-splash_screen_hd=pkg:/images/rsgde_splash_hd.jpg
+splash_screen_hd=pkg:/images/logo.jpg
 
-splash_screen_fhd=pkg:/images/rde_splash_fhd.jpg
+splash_screen_fhd=pkg:/images/logo.jpg
 
 splash_color=#662D91
 splash_min_time=1000

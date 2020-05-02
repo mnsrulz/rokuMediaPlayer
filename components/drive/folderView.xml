@@ -1,0 +1,22 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "folderView" extends = "ListPanel">
+    <interface>
+        <field id="folderId" type="string" onChange = "displayFolderContent" />
+    </interface>
+    <script type = "text/brightscript" uri = "pkg:/components/drive/folderView.brs"/>
+    <children >
+        <LabelList id = "innerList">
+        </LabelList>
+        <!-- <PosterGrid
+            id = "posterGridCategoryMedia"
+            basePosterSize = "[ 144, 214 ]"
+            caption1NumLines = "2"
+            numColumns = "4"
+            numRows = "2"
+            itemSpacing = "[ 20, 20 ]" /> -->
+    </children>
+
+</component>

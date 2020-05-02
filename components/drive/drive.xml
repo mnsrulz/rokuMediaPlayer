@@ -1,0 +1,9 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "drive" extends = "Scene">
+
+    <script type = "text/brightscript" uri = "pkg:/components/drive/drive.brs"/>
+
+</component>

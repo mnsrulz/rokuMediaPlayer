@@ -1,0 +1,35 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "oauth" extends = "Panel">
+    <interface>
+        <field id="linkButton" type="node" />
+        <field id="accessToken" type="string" />
+        <field id="refreshToken" type="string" />
+        <field id="tokenreceived" type="boolean" />
+    </interface>
+    <script type = "text/brightscript" uri = "pkg:/components/drive/request.brs"/>
+    <script type = "text/brightscript" uri = "pkg:/components/drive/oauth.brs"/>
+
+    <children >
+        <LayoutGroup 
+            id = "infoRectangle" 
+            translation = "[ 0, 44 ]" 
+             itemSpacings = "[8]">
+            <Button id="linkButton" text="Link" width="388"/>
+            <Label 
+                id = "mediaTitle" width="388"
+                wrap = "true"
+                font = "font:MediumSystemFont" />
+            <Label 
+                id = "mediaDesc" width="388"
+                wrap = "true" 
+                maxLines = "2"
+                font = "font:SmallSystemFont" />
+            <Timer id="authCodeTimer" repeat="true" duration="5" />
+        </LayoutGroup>
+
+    </children>
+
+</component>

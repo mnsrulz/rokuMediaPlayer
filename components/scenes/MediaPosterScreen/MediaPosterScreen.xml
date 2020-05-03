@@ -2,13 +2,13 @@
 
 <!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
 
-<component name = "S3" extends = "Panel">
+<component name = "MediaPosterScreen" extends = "Panel">
 
     <interface>
         <field id="posterMode" type="string" onChange="readPosterMode" />
         <field id="mediaItem" type="node" onChange = "readmediaitem" />
     </interface>
-    <script type = "text/brightscript" uri = "pkg:/components/s3/s3.brs"/>
+    <script type = "text/brightscript" uri = "pkg:/components/scenes/MediaPosterScreen/MediaPosterScreen.brs"/>
 
     <children >
         <LayoutGroup 

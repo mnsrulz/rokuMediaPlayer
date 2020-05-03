@@ -11,7 +11,7 @@ sub showChannelSGScreen()
   print m.port
 
   screen.setMessagePort(m.port)
-  scene = screen.CreateScene("S0")
+  scene = screen.CreateScene("HomeScene")
 
   screen.show()
 

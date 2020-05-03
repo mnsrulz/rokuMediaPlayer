@@ -2,9 +2,9 @@
 
 <!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
 
-<component name = "S1" extends = "ListPanel">
+<component name = "PlaylistScreen" extends = "ListPanel">
 
-    <script type = "text/brightscript" uri = "pkg:/components/s1/s1.brs"/>
+    <script type = "text/brightscript" uri = "pkg:/components/scenes/PlaylistScreen/PlaylistScreen.brs"/>
 
     <children >
         <LabelList id = "categoriesLabelList">

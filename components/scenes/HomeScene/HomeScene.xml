@@ -2,7 +2,7 @@
 <component name = "HomeScene" extends = "Scene">
     <script type = "text/brightscript" uri = "pkg:/components/scenes/HomeScene/HomeScene.brs"/>
     <children>
-        <OverHang id="overhang" showOptions="true" />
+        <OverHang id="overhang" showOptions="true" title="Simple Media Player" logoUri=" " leftDividerUri=" "/>
         <PanelSet id="panelSet" />
         <Video id="video" visible="false" />
     </children>

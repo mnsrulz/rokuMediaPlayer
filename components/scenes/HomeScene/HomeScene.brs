@@ -1,6 +1,6 @@
 
 sub init()
-    m.top.backgroundURI = "pkg:/images/rsgde_bg_hd.jpg"
+    m.top.backgroundURI = "pkg:/images/new-bg-fhd.jpg"
     m.overhang = m.top.findNode("overhang")
     m.panelSet = m.top.findNode("panelSet")
     m.video = m.top.findNode("video")

@@ -1,33 +1,30 @@
 
 sub init()
     m.top.backgroundURI = "pkg:/images/rsgde_bg_hd.jpg"
-    oh = createObject("roSGNode", "OverHang")
-    m.top.appendChild(oh)
-    m.Overhang = oh
+    m.overhang = m.top.findNode("overhang")
+    m.panelSet = m.top.findNode("panelSet")
+    m.video = m.top.findNode("video")
 
-    m.panelSet =  createObject("roSGNode", "PanelSet")
-    m.top.appendChild(m.panelSet)
+    m.global.AddField("videoNode", "node", false)
+    m.global.AddField("lastFocusNode", "node", false) 'Use to set focus once video playback finishes up
+    m.global.videoNode = m.video
 
-    oh.showOptions = true
-    loadCategories()
+    m.global.AddField("panelsetNode", "node", false)
+    m.global.panelsetNode = m.panelSet
+
+    ' loadCategories()
+    m.categoriespanel = m.panelSet.createChild("PlaylistScreen")
     m.top.setFocus(true)
-    initVideoPlayer()
 end sub
 
-sub initVideoPlayer()
-    m.video = createObject("roSGNode", "Video")
-    m.video.visible = false
-    m.top.appendChild(m.video)
-end sub
-
-function onKeyEvent(key as string,press as boolean) as boolean
-    ' This event is an overhead, but we have live with it. 
+function onKeyEvent(key as string, press as boolean) as boolean
+    ' This event is an overhead, but we have live with it.
     if press then
         if key = "back"
             if (m.video.visible)
                 m.video.control = "stop"
                 m.video.visible = false
-                m.mediaSourcesPanel.lastFocusNode.setFocus(true)
+                m.global.lastFocusNode.setFocus(true)
                 return true
             end if
         end if
@@ -35,38 +32,11 @@ function onKeyEvent(key as string,press as boolean) as boolean
     return false
 end function
 
-sub loadCategories()
-    m.LoadTask = CreateObject("roSGNode", "SimpleTask")
-    m.LoadTask.uri = "http://mediacatalogadmin.herokuapp.com/api/playlist"
-    m.LoadTask.observeField("content", "categoryLoaded")
-    print "setting to execution of category load task"
-    m.LoadTask.control = "RUN"
-end sub
-
-sub categoryLoaded()
-    setpanels()
-    print "Loading categories..."
-    resultAsJson = ParseJSON(m.LoadTask.content)
-
-    ContentNode_object = createObject("RoSGNode", "ContentNode")
-
-    m.categoriespanel.list.content = ContentNode_object
-    for each categoryKey in resultAsJson
-        ContentNode_child_object = ContentNode_object.createChild("ContentNode")
-        ContentNode_child_object.title = categoryKey.displayName
-        ContentNode_child_object.ShortDescriptionLine1 = categoryKey.id
-        print categoryKey.displayName
-    end for
-
-    m.categoriespanel.list.observeField("itemFocused", "showcategorymedia")
-
-    m.categoriespanel.setFocus(true)
-end sub
 
 sub showcategorymedia()
     categorycontent = m.categoriespanel.list.content.getChild(m.categoriespanel.list.itemFocused)
     m.gridPanel.categoryKey = categorycontent.ShortDescriptionLine1
-    m.Overhang.title = categorycontent.title
+    m.overhang.title = categorycontent.title
 end sub
 
 sub setpanels()
@@ -77,8 +47,8 @@ end sub
 
 sub showCurrentSelectedMediaInfo()
     currentSelectedMediaItem = m.gridPanel.grid.content.getChild(m.gridPanel.grid.itemFocused)
-    
-    m.posterPanel = createObject("RoSGNode","MediaPosterScreen")
+
+    m.posterPanel = createObject("RoSGNode", "MediaPosterScreen")
     m.posterPanel.mediaItem = currentSelectedMediaItem
     m.gridPanel.nextPanel = m.posterPanel
     m.posterPanel.observeField("focusedChild", "onFucusPosterPanel")

@@ -3,8 +3,6 @@ sub init()
     m.top.panelSize = "narrow"
     m.top.focusable = true
     m.top.hasNextPanel = true
-    'm.top.leftPosition = 130
-    ' m.top.createNextPanelOnItemFocus = false
     m.top.optionsAvailable = false
     m.top.goBackCount = 2
     m.mediaTitle = m.top.findNode("mediaTitle")
@@ -24,7 +22,6 @@ sub readmediaitem()
         print "setting to execution of loading IMDB info task"
         m.ReadMediaImdbInfoTask.control = "RUN"
     end if
-
 end sub
 
 sub readImdbInfo()

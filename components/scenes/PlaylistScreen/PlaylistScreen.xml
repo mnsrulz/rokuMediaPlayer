@@ -1,14 +1,11 @@
 <?xml version = "1.0" encoding = "utf-8" ?>
-
-<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
-
 <component name = "PlaylistScreen" extends = "ListPanel">
-
     <script type = "text/brightscript" uri = "pkg:/components/scenes/PlaylistScreen/PlaylistScreen.brs"/>
-
     <children >
-        <LabelList id = "categoriesLabelList">
+        <LabelList id = "innerList">
+            <ContentNode>
+                <ContentNode title = "Loading..." />
+            </ContentNode>
         </LabelList>
     </children>
-
 </component>

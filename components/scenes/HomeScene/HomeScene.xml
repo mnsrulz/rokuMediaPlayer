@@ -2,6 +2,7 @@
 <component name = "HomeScene" extends = "Scene">
     <script type = "text/brightscript" uri = "pkg:/components/scenes/HomeScene/HomeScene.brs"/>
     <children>
+        <FadingBackground id="fadingBackground" width="1280" height="720" ShadeOpacity="0.85"/>
         <OverHang id="overhang" showOptions="true" title="Simple Media Player" logoUri=" " leftDividerUri=" "/>
         <PanelSet id="panelSet" />
         <Video id="video" visible="false" />

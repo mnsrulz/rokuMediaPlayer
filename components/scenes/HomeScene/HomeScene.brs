@@ -1,6 +1,8 @@
 
 sub init()
-    m.top.backgroundURI = "pkg:/images/new-bg-fhd.jpg"
+    m.fadingBackground = m.top.findNode("fadingBackground")
+    ' m.fadingBackground.uri = ""
+    ' m.top.backgroundURI = "pkg:/images/new-bg-fhd.jpg"
     m.overhang = m.top.findNode("overhang")
     m.panelSet = m.top.findNode("panelSet")
     m.video = m.top.findNode("video")
@@ -11,6 +13,9 @@ sub init()
 
     m.global.AddField("panelsetNode", "node", false)
     m.global.panelsetNode = m.panelSet
+    
+    m.global.AddField("fadingBackgroundNode", "node", false)
+    m.global.fadingBackgroundNode = m.fadingBackground
 
     ' loadCategories()
     m.categoriespanel = m.panelSet.createChild("PlaylistScreen")

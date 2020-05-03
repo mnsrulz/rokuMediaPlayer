@@ -81,7 +81,6 @@ sub loadmediaitems()
         ContentNode_child_object = ContentNode_object.createChild("ContentNode")
         ContentNode_child_object.title = "Error... please try again"
     end if
-    m.lstMediaSources.setFocus(true)
 end sub
 
 

@@ -144,8 +144,10 @@ sub onFucusPosterPanel()
             mediaSourcesPanel = m.global.panelSetNode.createChild("PlayableMediaListScreen")
             currentSelectedMediaItem = m.top.grid.content.getChild(m.top.grid.itemFocused)
             mediaSourcesPanel.mediaItem = currentSelectedMediaItem
+            m.global.fadingBackgroundNode.uri = currentSelectedMediaItem.Url
         end if
     else
+        m.global.fadingBackgroundNode.uri = ""
         m.posterPanel.posterMode = ""
     end if
 end sub

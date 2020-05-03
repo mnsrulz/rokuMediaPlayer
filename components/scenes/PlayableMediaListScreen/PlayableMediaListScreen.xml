@@ -1,15 +1,9 @@
 <?xml version = "1.0" encoding = "utf-8" ?>
-
-<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
-
-<component name = "PlayableMediaListScreen" extends = "Panel">
+<component name = "PlayableMediaListScreen" extends = "ListPanel">
     <interface>
-        <field id="video" type="node" />
         <field id="mediaItem" type="node" onChange = "readmediaitem" />
-        <field id="lastFocusNode" type="node" />
     </interface>
     <script type = "text/brightscript" uri = "pkg:/components/scenes/PlayableMediaListScreen/PlayableMediaListScreen.brs"/>
-
     <children>
         <LayoutGroup 
             id = "layoutgroup4" 
@@ -21,9 +15,7 @@
                 font = "font:MediumBoldSystemFont" />
             <LabelList id = "mediaSourceList" itemSize="[512, 32]" numRows="6">
                 <ContentNode role = "content">
-                    <ContentNode title = "Anythin" />
-                    <ContentNode title = "Choose" />
-                    <ContentNode title = "Play" />
+                    <ContentNode title = "Loading..." />
                 </ContentNode>
             </LabelList>
             <Label 
@@ -36,9 +28,7 @@
                 wrap = "true" 
                 maxLines = "4"
                 font = "font:SmallestSystemFont" />
-
+            <Timer id="fakeTimer" duration="0.1" />
         </LayoutGroup>
-
     </children>
-
 </component>

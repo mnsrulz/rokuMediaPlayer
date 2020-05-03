@@ -1,45 +1,25 @@
 <?xml version = "1.0" encoding = "utf-8" ?>
-
-<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
-
 <component name = "MediaPosterScreen" extends = "Panel">
-
     <interface>
         <field id="posterMode" type="string" onChange="readPosterMode" />
         <field id="mediaItem" type="node" onChange = "readmediaitem" />
     </interface>
     <script type = "text/brightscript" uri = "pkg:/components/scenes/MediaPosterScreen/MediaPosterScreen.brs"/>
-
     <children >
         <LayoutGroup 
             id = "infoRectangle" 
             translation = "[ 0, 44 ]" 
              itemSpacings = "[8]">
-            <Poster id="mediaposter" width="288" height="428" />
+            <Poster id="mediaposter" width="288" height="428"  />
             <Label 
-                id = "mediaTitle" 
-                width="388"
+                id = "mediaTitle" width="388"
                 wrap = "true"
                 font = "font:MediumSystemFont" />
             <Label 
-                id = "mediaDesc" 
-                width="388"
+                id = "mediaDesc" width="388"
                 wrap = "true" 
                 maxLines = "2"
                 font = "font:SmallSystemFont" />
-
         </LayoutGroup>
-        <!-- <Label id = "myLabel"
-  width = "200"
-  height = "200"
-  text = "Hello Label"
-  font = "font:MediumBoldSystemFont" />
-        <LabelList id = "l3">
-            <ContentNode role = "content">
-                <ContentNode title = "Play" />
-            </ContentNode>
-        </LabelList>
-        <Video id="vd" enableUI="true" translation="[0,0]"/> -->
     </children>
-
 </component>

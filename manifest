@@ -10,5 +10,5 @@ splash_screen_hd=pkg:/images/rsgde_splash_hd.jpg
 splash_screen_sd=pkg:/images/rde_splash_sd.jpg
 splash_color=#662d91
 splash_min_time=1000
-ui_resolutions=FHD
+ui_resolutions=HD
 '**********=Copyright 2016 Roku Corp.  All Rights Reserved. **********

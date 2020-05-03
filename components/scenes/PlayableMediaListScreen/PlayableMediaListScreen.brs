@@ -2,11 +2,15 @@ sub init()
     m.top.panelSize = "wide"
     m.top.focusable = true
     m.top.hasNextPanel = false
-    m.top.leftPosition = 130
+    m.top.list = m.top.findNode("mediaSourceList")
     m.lstMediaSources = m.top.findNode("mediaSourceList")
     m.mediaTitle = m.top.findNode("mediaTitle")
     m.mediaDesc = m.top.findNode("mediaDesc")
     m.mediaFileName = m.top.findNode("mediaFileName")
+
+    m.faketimer = m.top.findNode("fakeTimer")
+    m.faketimer.control = "start"
+    m.faketimer.ObserveField("fire", "onSetupFocusTaskCompleted")
 end sub
 
 function IsString(value as dynamic) as boolean
@@ -21,25 +25,20 @@ function IsArray(value as dynamic) as boolean
     return IsValid(value) and GetInterface(value, "ifArray") <> invalid
 end function
 
+sub onSetupFocusTaskCompleted()
+    m.top.list.setFocus(true)
+end sub
 
 sub readmediaitem()
-    ContentNode_object = createObject("RoSGNode", "ContentNode")
-    m.lstMediaSources.content = ContentNode_object
-
     currentitem = m.top.mediaItem
     if currentitem.StreamContentIDs.Count() > 0
-        ContentNode_child_object = ContentNode_object.createChild("ContentNode")
-        ContentNode_child_object.title = "Loading media items"
-        ContentNode_child_object.url = ""
-        ContentNode_child_object.ShortDescriptionLine1 = ""
-        ContentNode_child_object.ShortDescriptionLine2 = ""
-        ' urltowatch = currentitem.StreamContentIDs[0]
         m.LoadMediaItemsTask = CreateObject("roSGNode", "SimpleTask")
         m.LoadMediaItemsTask.uri = currentitem.StreamContentIDs[0]
         m.LoadMediaItemsTask.observeField("content", "loadmediaitems")
         print "setting to execution of loading media items load task"
         m.LoadMediaItemsTask.control = "RUN"
     else
+        ContentNode_object = createObject("RoSGNode", "ContentNode")
         for each categoryKey in currentitem.Streams
             ContentNode_child_object = ContentNode_object.createChild("ContentNode")
             ContentNode_child_object.title = categoryKey.contentid
@@ -48,11 +47,12 @@ sub readmediaitem()
             ContentNode_child_object.ShortDescriptionLine2 = categoryKey.contentid.Split("|")[2]
             print categoryKey.displayName
         end for
-        m.lstMediaSources.setFocus(true)
+        m.top.list.content = ContentNode_object
+        m.top.list.setFocus(true)
     end if
-    m.lstMediaSources.observeField("itemFocused", "preloadmedia")
-    m.lstMediaSources.observeField("itemSelected", "itemselected")
-    m.top.video.observeField("state", "controlvideoplay")
+    m.top.list.observeField("itemFocused", "preloadmedia")
+    m.top.list.observeField("itemSelected", "itemselected")
+    m.global.videoNode.observeField("state", "controlvideoplay")
 
     m.mediaTitle.text = currentitem.shortdescriptionline1
     m.mediaDesc.text = currentitem.DESCRIPTION
@@ -89,8 +89,8 @@ sub preloadmedia()
     print "Preloading media"
     selectedmediaitem = m.lstMediaSources.content.getChild(m.lstMediaSources.itemFocused)
     previousvideocontenturl = ""
-    if m.top.video.content <> invalid
-        previousvideocontenturl = m.top.video.content.url
+    if m.global.videoNode.content <> invalid
+        previousvideocontenturl = m.global.videoNode.content.url
     end if
     if selectedmediaitem <> invalid
         if previousvideocontenturl <> selectedmediaitem.url
@@ -108,10 +108,10 @@ sub preloadmedia()
                 httpAgent.SetCertificatesFile("common:/certs/ca-bundle.crt")
                 ' httpAgent.AddHeader("X-Roku-Reserved-Dev-Id", "")
             end if
-            m.top.video.setHttpAgent(httpAgent)
+            m.global.videoNode.setHttpAgent(httpAgent)
 
-            m.top.video.content = videoContent
-            m.top.video.control = "prebuffer"
+            m.global.videoNode.content = videoContent
+            m.global.videoNode.control = "prebuffer"
         end if
     end if
 
@@ -144,28 +144,28 @@ function getMediaStreamHeaders(headers as string) as object
 end function
 
 sub itemselected()
-    m.top.video.visible = true
-    m.top.video.setFocus(true)
-    if (m.top.video.content.STREAMFORMAT = "hls")
-        m.top.video.seek = 9999999999
+    m.global.videoNode.visible = true
+    m.global.videoNode.setFocus(true)
+    if (m.global.videoNode.content.STREAMFORMAT = "hls")
+        m.global.videoNode.seek = 9999999999
     end if
-    m.top.video.control = "play"
-    m.top.lastFocusNode = m.lstMediaSources
+    m.global.videoNode.control = "play"
+    m.global.lastFocusNode = m.top.list
 end sub
 
 sub controlvideoplay()
-    print m.top.video.state
-    if (m.top.video.state = "finished") then
-        m.top.video.control = "stop"
-        m.top.video.visible = false
-        m.lstMediaSources.setFocus(true)
-    else if (m.top.video.state = "buffering") then
-        currentplayitem = m.top.video
-    else if(m.top.video.state = "error") then
+    print m.global.videoNode.state
+    if (m.global.videoNode.state = "finished") then
+        m.global.videoNode.control = "stop"
+        m.global.videoNode.visible = false
+        m.top.list.setFocus(true)
+    else if (m.global.videoNode.state = "buffering") then
+        currentplayitem = m.global.video
+    else if(m.global.videoNode.state = "error") then
         ' itemfocusednow = m.lstMediaSources.itemFocused
         ' selectedmediaitem = m.lstMediaSources.content.getChild(itemfocusednow)
         ' selectedmediaitem.title = "ERROR READING SOURCE"
-        m.lstMediaSources.setFocus(true)
+        m.top.list.setFocus(true)
     end if
 end sub
 

@@ -99,8 +99,8 @@ end sub
 
 function lastIndexOf(input as string, char as string) as integer
     newStr = ""
-    len = len(input)
-    for i = len to 1 step -1
+    _len = len(input)
+    for i = _len to 1 step -1
         if Mid(input, i, 1) = char then
             return i
         end if

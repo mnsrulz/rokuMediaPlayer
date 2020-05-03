@@ -2,13 +2,13 @@
 
 <!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
 
-<component name = "S4" extends = "Panel">
+<component name = "PlayableMediaListScreen" extends = "Panel">
     <interface>
         <field id="video" type="node" />
         <field id="mediaItem" type="node" onChange = "readmediaitem" />
         <field id="lastFocusNode" type="node" />
     </interface>
-    <script type = "text/brightscript" uri = "pkg:/components/s4/s4.brs"/>
+    <script type = "text/brightscript" uri = "pkg:/components/scenes/PlayableMediaListScreen/PlayableMediaListScreen.brs"/>
 
     <children>
         <LayoutGroup 

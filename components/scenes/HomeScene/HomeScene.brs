@@ -70,15 +70,15 @@ sub showcategorymedia()
 end sub
 
 sub setpanels()
-    m.categoriespanel = m.panelSet.createChild("s1")
-    m.gridPanel = m.panelSet.createChild("s2")
+    m.categoriespanel = m.panelSet.createChild("PlaylistScreen")
+    m.gridPanel = m.panelSet.createChild("PosterGridScreen")
     m.gridPanel.grid.observeField("itemFocused", "showCurrentSelectedMediaInfo")
 end sub
 
 sub showCurrentSelectedMediaInfo()
     currentSelectedMediaItem = m.gridPanel.grid.content.getChild(m.gridPanel.grid.itemFocused)
     
-    m.posterPanel = createObject("RoSGNode","s3")
+    m.posterPanel = createObject("RoSGNode","MediaPosterScreen")
     m.posterPanel.mediaItem = currentSelectedMediaItem
     m.gridPanel.nextPanel = m.posterPanel
     m.posterPanel.observeField("focusedChild", "onFucusPosterPanel")
@@ -88,7 +88,7 @@ end sub
 sub onFucusPosterPanel()
     if not m.panelSet.isGoingBack
         m.posterPanel.posterMode = "full"
-        mediaSourcesPanel = createObject("RoSGNode", "s4")
+        mediaSourcesPanel = createObject("RoSGNode", "PlayableMediaListScreen")
         mediaSourcesPanel.video = m.video
         m.mediaSourcesPanel = mediaSourcesPanel
         m.panelSet.appendChild(mediaSourcesPanel)

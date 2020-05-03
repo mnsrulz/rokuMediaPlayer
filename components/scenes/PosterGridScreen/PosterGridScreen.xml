@@ -2,14 +2,14 @@
 
 <!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
 
-<component name = "S2" extends = "GridPanel">
+<component name = "PosterGridScreen" extends = "GridPanel">
 
     <interface>
         <field id = "overhangtext" type = "string" onChange= "setOverhangText" />
         <field id = "categoryKey" type = "string" onChange = "readpostergrid" />
     </interface>
     
-    <script type = "text/brightscript" uri = "pkg:/components/s2/s2.brs"/>
+    <script type = "text/brightscript" uri = "pkg:/components/scenes/PosterGridScreen/PosterGridScreen.brs"/>
 
     <children >
         <PosterGrid

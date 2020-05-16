@@ -97,7 +97,7 @@ sub preloadmedia()
             videoContent = createObject("RoSGNode", "ContentNode")
             videoContent.url = selectedmediaitem.url
             m.mediaFileName.text = selectedmediaitem.title
-            videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
+            ' videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
             ' videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
 
             'need to relook , try to pass collection from top or from api

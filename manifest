@@ -1,7 +1,7 @@
 title=Simple Roku Media Player
 major_version=2
 minor_version=1
-build_version=0
+build_version=1
 mm_icon_focus_hd=pkg:/images/new-new-logo-336x210.png
 mm_icon_focus_sd=pkg:/images/new-new-logo-248x140.png
 subtitle=A Simple Roku Media Player

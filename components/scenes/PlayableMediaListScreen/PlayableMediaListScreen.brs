@@ -98,7 +98,12 @@ sub preloadmedia()
         if previousvideocontenturl <> selectedmediaitem.url
             videoContent = createObject("RoSGNode", "ContentNode")
             videoContent.url = selectedmediaitem.url
-            m.mediaFileName.text = selectedmediaitem.hostname + " | " + selectedmediaitem.title
+            if selectedmediaitem.hostname <> invalid
+                m.mediaFileName.text = selectedmediaitem.hostname + " | " + selectedmediaitem.title
+            else
+                m.mediaFileName.text = selectedmediaitem.title    
+            end if
+            
             httpAgent = CreateObject("roHttpAgent")
 
             if selectedmediaitem.headers <> invalid

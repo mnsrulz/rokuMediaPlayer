@@ -65,16 +65,18 @@ sub loadmediaitems()
     ContentNode_object = createObject("RoSGNode", "ContentNode")
     if resultAsJson <> invalid
         m.lstMediaSources.content = ContentNode_object
-        for each categoryKey in resultAsJson.items
+        for each mediaItem in resultAsJson.items
             ContentNode_child_object = ContentNode_object.createChild("ContentNode")
-            ContentNode_child_object.title = categoryKey.title
-            ContentNode_child_object.url = categoryKey.streamUrl
-            ContentNode_child_object.ShortDescriptionLine1 = categoryKey.mimeType
-            if categoryKey.referer <> invalid
-                ContentNode_child_object.ShortDescriptionLine2 = categoryKey.referer
+            ContentNode_child_object.title = mediaItem.title
+            ContentNode_child_object.url = mediaItem.streamUrl
+            ContentNode_child_object.ShortDescriptionLine1 = mediaItem.mimeType
+
+            ContentNode_child_object.addFields({ hostname: mediaItem.hostName })
+
+            if mediaItem.headers <> invalid
+                ContentNode_child_object.addFields({ headers: mediaItem.headers })
             end if
-            ' ContentNode_child_object.ShortDescriptionLine2 = categoryKey.title
-            print categoryKey.title
+
         end for
     else
         m.lstMediaSources.content = ContentNode_object
@@ -96,20 +98,19 @@ sub preloadmedia()
         if previousvideocontenturl <> selectedmediaitem.url
             videoContent = createObject("RoSGNode", "ContentNode")
             videoContent.url = selectedmediaitem.url
-            m.mediaFileName.text = selectedmediaitem.title
-            ' videoContent.streamformat = getMediaStreamFormat(selectedmediaitem.ShortDescriptionLine1) ''should be passed from top
-            ' videoContent.HttpHeaders = getMediaStreamHeaders(selectedmediaitem.ShortDescriptionLine2)
-
-            'need to relook , try to pass collection from top or from api
+            m.mediaFileName.text = selectedmediaitem.hostname + " | " + selectedmediaitem.title
             httpAgent = CreateObject("roHttpAgent")
-            httpAgent.AddHeader("Referer", selectedmediaitem.ShortDescriptionLine2)
+
+            if selectedmediaitem.headers <> invalid
+                for each entry in selectedmediaitem.headers
+                    httpAgent.AddHeader(entry, selectedmediaitem.headers[entry])
+                end for
+            end if
 
             if left(selectedmediaitem.url, 6) = "https:"
                 httpAgent.SetCertificatesFile("common:/certs/ca-bundle.crt")
-                ' httpAgent.AddHeader("X-Roku-Reserved-Dev-Id", "")
             end if
             m.global.videoNode.setHttpAgent(httpAgent)
-
             m.global.videoNode.content = videoContent
             m.global.videoNode.control = "prebuffer"
         end if

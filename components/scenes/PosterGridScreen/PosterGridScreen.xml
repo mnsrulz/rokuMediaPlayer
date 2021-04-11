@@ -2,7 +2,7 @@
 <component name = "PosterGridScreen" extends = "GridPanel">
     <interface>
         <field id = "overhangtext" type = "string" onChange= "setOverhangText" />
-        <field id = "categoryKey" type = "string" onChange = "readpostergrid" />
+        <field id = "playlistId" type = "string" onChange = "readpostergrid" />
     </interface>
     <script type = "text/brightscript" uri = "pkg:/components/scenes/PosterGridScreen/PosterGridScreen.brs"/>
     <children >

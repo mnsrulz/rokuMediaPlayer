@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<component name="AuthenticatedClient" extends="Task">
+  <interface>
+    <field id = "params" type = "assocarray" />
+    <field id = "uri" type = "string" />
+    <field id = "body" type = "string" />
+    <field id = "contentType" type = "string" />
+    <field id = "method" type = "string" />
+    <field id = "content" type = "string" />
+  </interface>
+  <script type = "text/brightscript" uri = "pkg:/components/request.brs"/>
+  <script type = "text/brightscript" uri = "pkg:/components/AuthenticatedClient.brs"/>
+
+</component>

@@ -31,25 +31,12 @@ end sub
 
 sub readmediaitem()
     currentitem = m.top.mediaItem
-    if currentitem.StreamContentIDs.Count() > 0
-        m.LoadMediaItemsTask = CreateObject("roSGNode", "SimpleTask")
-        m.LoadMediaItemsTask.uri = currentitem.StreamContentIDs[0]
-        m.LoadMediaItemsTask.observeField("content", "loadmediaitems")
-        print "setting to execution of loading media items load task"
-        m.LoadMediaItemsTask.control = "RUN"
-    else
-        ContentNode_object = createObject("RoSGNode", "ContentNode")
-        for each categoryKey in currentitem.Streams
-            ContentNode_child_object = ContentNode_object.createChild("ContentNode")
-            ContentNode_child_object.title = categoryKey.contentid
-            ContentNode_child_object.url = categoryKey.url
-            ContentNode_child_object.ShortDescriptionLine1 = categoryKey.contentid.Split("|")[1]
-            ContentNode_child_object.ShortDescriptionLine2 = categoryKey.contentid.Split("|")[2]
-            print categoryKey.displayName
-        end for
-        m.top.list.content = ContentNode_object
-        m.top.list.setFocus(true)
-    end if
+    m.LoadMediaItemsTask = CreateObject("roSGNode", "AuthenticatedClient")
+    requesturi = "https://mediacatalog.netlify.app/.netlify/functions/server/items/" + currentitem.id + "/mediasources"
+    m.LoadMediaItemsTask.uri = requesturi
+    m.LoadMediaItemsTask.observeField("content", "onMediaSourceLoadCompleted")
+    m.LoadMediaItemsTask.control = "RUN"
+
     m.top.list.observeField("itemFocused", "preloadmedia")
     m.top.list.observeField("itemSelected", "itemselected")
     m.global.videoNode.observeField("state", "controlvideoplay")
@@ -59,24 +46,37 @@ sub readmediaitem()
     m.mediaFileName.text = ""
 end sub
 
-sub loadmediaitems()
-    print "Loading media sources..."
+sub onMediaSourceLoadCompleted()
     resultAsJson = ParseJSON(m.LoadMediaItemsTask.content)
+    if resultAsJson <> invalid
+        'm is for meta, r is for recursive, q is for query url can be multiple
+        requesturi = "https://nurlresolver.netlify.app/.netlify/functions/server/resolve?m=true&r=true"
+        for each mediaItem in resultAsJson
+            requesturi = requesturi + "&q=" + mediaItem.webViewLink.EncodeUriComponent()
+        end for
+        print(requesturi)
+        m.LoadMediaResolveContentTask = CreateObject("roSGNode", "AuthenticatedClient")
+        m.LoadMediaResolveContentTask.uri = requesturi
+        m.LoadMediaResolveContentTask.observeField("content", "onLoadMediaResolveCompleted")
+        m.LoadMediaResolveContentTask.control = "RUN"
+    end if
+end sub
+
+sub onLoadMediaResolveCompleted()
+    print "onLoadMediaResolveCompleted..."
+    resultAsJson = ParseJSON(m.LoadMediaResolveContentTask.content)
     ContentNode_object = createObject("RoSGNode", "ContentNode")
     if resultAsJson <> invalid
         m.lstMediaSources.content = ContentNode_object
-        for each mediaItem in resultAsJson.items
+        for each mediaItem in resultAsJson
             ContentNode_child_object = ContentNode_object.createChild("ContentNode")
             ContentNode_child_object.title = mediaItem.title
-            ContentNode_child_object.url = mediaItem.streamUrl
+            ContentNode_child_object.url = mediaItem.link
             ContentNode_child_object.ShortDescriptionLine1 = mediaItem.mimeType
-
-            ContentNode_child_object.addFields({ hostname: mediaItem.hostName })
-
+            ContentNode_child_object.addFields({ hostname: mediaItem.parent })
             if mediaItem.headers <> invalid
                 ContentNode_child_object.addFields({ headers: mediaItem.headers })
             end if
-
         end for
     else
         m.lstMediaSources.content = ContentNode_object
@@ -101,9 +101,9 @@ sub preloadmedia()
             if selectedmediaitem.hostname <> invalid
                 m.mediaFileName.text = selectedmediaitem.hostname + " | " + selectedmediaitem.title
             else
-                m.mediaFileName.text = selectedmediaitem.title    
+                m.mediaFileName.text = selectedmediaitem.title
             end if
-            
+
             httpAgent = CreateObject("roHttpAgent")
 
             if selectedmediaitem.headers <> invalid
@@ -123,31 +123,31 @@ sub preloadmedia()
 
 end sub
 
-function getMediaStreamFormat(value as string) as string
-    if value = "video/x-matroska"
-        return "mkv"
-    else if value = "application/x-matroska" then
-        return "mkv"
-    else if value = "video/mp4" then
-        return "mp4"
-    else if value = "video/avi" then
-        return "mkv"
-    else if value = "video/x-m4v" then
-        return "mp4"
-    else if value = "hls" then
-        return "hls"
-    else
-        return "mkv"
-    end if
-end function
+' function getMediaStreamFormat(value as string) as string
+'     if value = "video/x-matroska"
+'         return "mkv"
+'     else if value = "application/x-matroska" then
+'         return "mkv"
+'     else if value = "video/mp4" then
+'         return "mp4"
+'     else if value = "video/avi" then
+'         return "mkv"
+'     else if value = "video/x-m4v" then
+'         return "mp4"
+'     else if value = "hls" then
+'         return "hls"
+'     else
+'         return "mkv"
+'     end if
+' end function
 
-function getMediaStreamHeaders(headers as string) as object
-    headersasarray = []
-    for each header in headers.Split(";")
-        headersasarray.push(header)
-    end for
-    return headersasarray
-end function
+' function getMediaStreamHeaders(headers as string) as object
+'     headersasarray = []
+'     for each header in headers.Split(";")
+'         headersasarray.push(header)
+'     end for
+'     return headersasarray
+' end function
 
 sub itemselected()
     m.global.videoNode.visible = true

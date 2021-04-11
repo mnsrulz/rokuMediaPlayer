@@ -15,12 +15,12 @@ sub readmediaitem()
     m.poster.uri = currentitem.Url
     m.mediaTitle.text = currentitem.shortdescriptionline1
     m.mediaDesc.text = ""
-    if Left(currentitem.id, 2) = "tt" then
-        m.ReadMediaImdbInfoTask = CreateObject("roSGNode", "SimpleTask")
-        m.ReadMediaImdbInfoTask.uri = "http://mediacatalogadmin.herokuapp.com/api/imdb/" + currentitem.id
-        m.ReadMediaImdbInfoTask.observeField("content", "readImdbInfo")
-        print "setting to execution of loading IMDB info task"
-        m.ReadMediaImdbInfoTask.control = "RUN"
+    if currentitem.imdbId <> invalid and Left(currentitem.imdbId, 2) = "tt" then
+       m.ReadMediaImdbInfoTask = CreateObject("roSGNode", "SimpleTask")
+       m.ReadMediaImdbInfoTask.uri = "http://mediacatalogadmin.herokuapp.com/api/imdb/" + currentitem.imdbId    'change this to netlify host api
+       m.ReadMediaImdbInfoTask.observeField("content", "readImdbInfo")
+       print "setting to execution of loading IMDB info task"
+       m.ReadMediaImdbInfoTask.control = "RUN"
     end if
 end sub
 

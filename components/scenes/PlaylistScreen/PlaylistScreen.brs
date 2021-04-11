@@ -10,21 +10,22 @@ sub init()
     m.top.list.setFocus(true)
 end sub
 
-sub loadCategories()
-    m.LoadTask = CreateObject("roSGNode", "SimpleTask")
-    m.LoadTask.uri = "http://mediacatalogadmin.herokuapp.com/api/playlist"
-    m.LoadTask.observeField("content", "onCategoryLoadCompleted")
-    print "setting to execution of category load task"
-    m.LoadTask.control = "RUN"
+sub loadCategories()    
+    m.loadPlaylistTask = CreateObject("roSGNode", "AuthenticatedClient")
+    requesturi = "https://mediacatalog.netlify.app/.netlify/functions/server/playlists?includeSystemDefined=true"
+    m.loadPlaylistTask.uri = requesturi
+    m.loadPlaylistTask.observeField("content", "onPlaylistLoadCompleted")
+    m.loadPlaylistTask.control = "RUN"
 end sub
 
-sub onCategoryLoadCompleted()
-    resultAsJson = ParseJSON(m.LoadTask.content)
+sub onPlaylistLoadCompleted()
+    print("onPlaylistLoadCompleted...")
+    resultAsJson = ParseJSON(m.loadPlaylistTask.content)
     parsedContent = createObject("RoSGNode", "ContentNode")
-    for each categoryKey in resultAsJson
+    for each playlist in resultAsJson
         playlistItem = parsedContent.createChild("ContentNode")
-        playlistItem.title = categoryKey.displayName
-        playlistItem.ShortDescriptionLine1 = categoryKey.id
+        playlistItem.title = playlist.title
+        playlistItem.ShortDescriptionLine1 = playlist.id
     end for
     m.top.observeField("createNextPanelIndex", "onCreateNextPanel")
     m.top.list.content = parsedContent
@@ -34,6 +35,6 @@ end sub
 sub onCreateNextPanel()
     currentSelectedPlaylistItem = m.top.list.content.getChild(m.top.createNextPanelIndex)
     m.gridPanel = createObject("RoSGNode", "PosterGridScreen")
-    m.gridPanel.categoryKey = currentSelectedPlaylistItem.ShortDescriptionLine1
+    m.gridPanel.playlistId = currentSelectedPlaylistItem.ShortDescriptionLine1
     m.top.nextPanel = m.gridPanel
 end sub

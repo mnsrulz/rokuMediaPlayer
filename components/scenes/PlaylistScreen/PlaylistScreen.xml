@@ -1,5 +1,5 @@
 <?xml version = "1.0" encoding = "utf-8" ?>
-<component name = "PlaylistScreen" extends = "ListPanel">
+<component name = "PlaylistScreen" extends = "ListPanel">    
     <script type = "text/brightscript" uri = "pkg:/components/scenes/PlaylistScreen/PlaylistScreen.brs"/>
     <children >
         <LabelList id = "innerList">

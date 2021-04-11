@@ -35,7 +35,7 @@ end function
 
 sub showcategorymedia()
     categorycontent = m.categoriespanel.list.content.getChild(m.categoriespanel.list.itemFocused)
-    m.gridPanel.categoryKey = categorycontent.ShortDescriptionLine1
+    m.gridPanel.playlistId = categorycontent.ShortDescriptionLine1
     m.overhang.title = categorycontent.title
 end sub
 

@@ -59,15 +59,16 @@ sub onMediaSourceLoadCompleted()
         m.LoadMediaResolveContentTask.uri = requesturi
         m.LoadMediaResolveContentTask.observeField("content", "onLoadMediaResolveCompleted")
         m.LoadMediaResolveContentTask.control = "RUN"
+    else
+        markAsError()
     end if
 end sub
 
 sub onLoadMediaResolveCompleted()
     print "onLoadMediaResolveCompleted..."
     resultAsJson = ParseJSON(m.LoadMediaResolveContentTask.content)
-    ContentNode_object = createObject("RoSGNode", "ContentNode")
     if resultAsJson <> invalid
-        m.lstMediaSources.content = ContentNode_object
+        ContentNode_object = createObject("RoSGNode", "ContentNode")
         for each mediaItem in resultAsJson
             ContentNode_child_object = ContentNode_object.createChild("ContentNode")
             ContentNode_child_object.title = mediaItem.title
@@ -78,14 +79,19 @@ sub onLoadMediaResolveCompleted()
                 ContentNode_child_object.addFields({ headers: mediaItem.headers })
             end if
         end for
-    else
         m.lstMediaSources.content = ContentNode_object
-        ContentNode_child_object = ContentNode_object.createChild("ContentNode")
-        ContentNode_child_object.title = "Error... please try again"
+        m.lstMediaSources.setFocus(true)
+    else
+        markAsError()
     end if
-    m.lstMediaSources.setFocus(true)
 end sub
 
+sub markAsError()
+    ContentNode_object = createObject("RoSGNode", "ContentNode")
+    ContentNode_child_object = ContentNode_object.createChild("ContentNode")
+    ContentNode_child_object.title = "Error... please try again"
+    m.lstMediaSources.content = ContentNode_object
+end sub
 
 sub preloadmedia()
     print "Preloading media"

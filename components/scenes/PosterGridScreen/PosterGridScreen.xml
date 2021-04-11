@@ -11,7 +11,8 @@
             basePosterSize = "[ 144, 214 ]"
             caption1NumLines = "0"
             numColumns = "4"
-            numRows = "2"
+            numRows = "2" 
+            posterDisplayMode = "scaleToZoom"
             itemSpacing = "[ 20, 20 ]" />
     </children>
 </component>

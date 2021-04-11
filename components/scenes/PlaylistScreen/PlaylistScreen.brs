@@ -10,7 +10,7 @@ sub init()
     m.top.list.setFocus(true)
 end sub
 
-sub loadCategories()    
+sub loadCategories()
     m.loadPlaylistTask = CreateObject("roSGNode", "AuthenticatedClient")
     requesturi = "https://mediacatalog.netlify.app/.netlify/functions/server/playlists?includeSystemDefined=true"
     m.loadPlaylistTask.uri = requesturi
@@ -20,14 +20,23 @@ end sub
 
 sub onPlaylistLoadCompleted()
     print("onPlaylistLoadCompleted...")
-    resultAsJson = ParseJSON(m.loadPlaylistTask.content)
     parsedContent = createObject("RoSGNode", "ContentNode")
-    for each playlist in resultAsJson
+    if m.loadPlaylistTask.responseCode = "200"
+        resultAsJson = ParseJSON(m.loadPlaylistTask.content)
+        for each playlist in resultAsJson
+            playlistItem = parsedContent.createChild("ContentNode")
+            playlistItem.title = playlist.title
+            playlistItem.ShortDescriptionLine1 = playlist.id
+        end for
+        m.top.observeField("createNextPanelIndex", "onCreateNextPanel")
+    else
         playlistItem = parsedContent.createChild("ContentNode")
-        playlistItem.title = playlist.title
-        playlistItem.ShortDescriptionLine1 = playlist.id
-    end for
-    m.top.observeField("createNextPanelIndex", "onCreateNextPanel")
+        if m.loadPlaylistTask.responseCode = "401"
+            playlistItem.title = "Unauthorized access. Please make the package with a valid token in it."
+        else
+            playlistItem.title = "Unable to load playlist. Response code received " + m.loadPlaylistTask.responseCode
+        end if
+    end if
     m.top.list.content = parsedContent
     m.top.list.setFocus(true)
 end sub

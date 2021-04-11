@@ -13,14 +13,17 @@ end sub
 sub readmediaitem()
     currentitem = m.top.mediaItem
     m.poster.uri = currentitem.Url
-    m.mediaTitle.text = currentitem.shortdescriptionline1
+    m.mediaTitle.text = currentitem.title
+
+    if(currentitem.year <> invalid) then m.mediaTitle.text = m.mediaTitle.text + " (" + str(currentitem.year).trim() + ")"
+
     m.mediaDesc.text = ""
     if currentitem.imdbId <> invalid and Left(currentitem.imdbId, 2) = "tt" then
-       m.ReadMediaImdbInfoTask = CreateObject("roSGNode", "SimpleTask")
-       m.ReadMediaImdbInfoTask.uri = "http://mediacatalogadmin.herokuapp.com/api/imdb/" + currentitem.imdbId    'change this to netlify host api
-       m.ReadMediaImdbInfoTask.observeField("content", "readImdbInfo")
-       print "setting to execution of loading IMDB info task"
-       m.ReadMediaImdbInfoTask.control = "RUN"
+        m.ReadMediaImdbInfoTask = CreateObject("roSGNode", "AuthenticatedClient")
+        requesturi = "https://imdbinfoapi.netlify.app/.netlify/functions/imdbinfo/" + currentitem.imdbId
+        m.ReadMediaImdbInfoTask.uri = requesturi
+        m.ReadMediaImdbInfoTask.observeField("content", "readImdbInfo")
+        m.ReadMediaImdbInfoTask.control = "RUN"
     end if
 end sub
 
@@ -28,11 +31,11 @@ sub readImdbInfo()
     print "Imdb Info loaded..."
     resultAsJson = ParseJSON(m.ReadMediaImdbInfoTask.content)
     if resultAsJson <> invalid
-        if resultAsJson.runtime <> invalid and resultAsJson.rating <> invalid
-            m.mediaDesc.text = resultAsJson.runtime + " | " + "Imdb: " + resultAsJson.rating
-        else if resultAsJson.runtime <> invalid
-            m.mediaDesc.text = resultAsJson.runtime
-        else if resultAsJson.rating <> invalid
+        if resultAsJson.duration <> "" and resultAsJson.rating <> ""
+            m.mediaDesc.text = resultAsJson.duration + " | " + "Imdb: " + resultAsJson.rating
+        else if resultAsJson.duration <> ""
+            m.mediaDesc.text = resultAsJson.duration
+        else if resultAsJson.rating <> ""
             m.mediaDesc.text = "Imdb: " + resultAsJson.rating
         end if
     else

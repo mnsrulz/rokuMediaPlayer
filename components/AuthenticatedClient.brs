@@ -20,5 +20,10 @@ sub executeTask()
         headers: _headers
     })
     dataResponse = req.send()
-    m.top.content = dataResponse.getString()
+    m.top.responseCode = dataResponse.GetResponseCode()
+    if dataResponse.GetResponseCode() = 200        
+        m.top.content = dataResponse.getString()
+    else
+        m.top.content = "NONSUCCESS"
+    end if
 end sub

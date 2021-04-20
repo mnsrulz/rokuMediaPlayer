@@ -12,7 +12,7 @@ end sub
 
 sub readmediaitem()
     currentitem = m.top.mediaItem
-    m.poster.uri = currentitem.Url
+    if currentitem.Url <> invalid then m.poster.uri = currentitem.Url
     m.mediaTitle.text = currentitem.title
 
     if(currentitem.year <> invalid) then m.mediaTitle.text = m.mediaTitle.text + " (" + str(currentitem.year).trim() + ")"

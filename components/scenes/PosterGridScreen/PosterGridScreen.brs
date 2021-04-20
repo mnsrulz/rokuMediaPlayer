@@ -5,7 +5,7 @@ sub init()
     m.top.hasNextPanel = true
     m.top.createNextPanelOnItemFocus = true
     m.top.selectButtonMovesPanelForward = true
-    m.top.grid = m.top.findNode("posterGridCategoryMedia")    
+    m.top.grid = m.top.findNode("posterGridCategoryMedia")
 end sub
 
 sub readpostergrid()
@@ -23,19 +23,20 @@ end sub
 sub onPlaylistItemsLoadCompleted()
     resultAsJson = ParseJSON(m.loadPlaylistMediaItemTask.content)
     if resultAsJson <> invalid
-        parsedContent = createObject("roSGNode", "ContentNode")        
+        parsedContent = createObject("roSGNode", "ContentNode")
         for each mediaItem in resultAsJson.items
             gridPoster = createObject("roSGNode", "ContentNode")
             gridPoster.id = mediaItem.id
             gridPoster.shortdescriptionline1 = mediaItem.title
             gridPoster.Description = mediaItem.overview
             '"poster_sizes": ['  "w92","w154","w185","w342","w500","w780","original"'],
-            gridPoster.SDPosterUrl = "https://image.tmdb.org/t/p/w342" + mediaItem.posterPath
-            gridPoster.HDPosterUrl = "https://image.tmdb.org/t/p/w342" + mediaItem.posterPath
-            gridPoster.Url = "https://image.tmdb.org/t/p/w500" + mediaItem.posterPath
-            gridPoster.addFields({ 
-                imdbId: mediaItem.imdbId, 
-                posterPath: mediaItem.posterPath,
+            if mediaItem.posterPath <> invalid
+                gridPoster.SDPosterUrl = "https://image.tmdb.org/t/p/w342" + mediaItem.posterPath
+                gridPoster.HDPosterUrl = "https://image.tmdb.org/t/p/w342" + mediaItem.posterPath
+                gridPoster.Url = "https://image.tmdb.org/t/p/w500" + mediaItem.posterPath
+            end if
+            gridPoster.addFields({
+                imdbId: mediaItem.imdbId,
                 title: mediaItem.title,
                 year: mediaItem.year
             })

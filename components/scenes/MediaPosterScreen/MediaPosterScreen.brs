@@ -12,13 +12,13 @@ end sub
 
 sub readmediaitem()
     currentitem = m.top.mediaItem
-    if currentitem.Url <> invalid then m.poster.uri = currentitem.Url
+    if isNonEmptyString(currentitem.Url) then m.poster.uri = currentitem.Url
     m.mediaTitle.text = currentitem.title
 
-    if(currentitem.year <> invalid) then m.mediaTitle.text = m.mediaTitle.text + " (" + str(currentitem.year).trim() + ")"
+    if isValid(currentitem.year) then m.mediaTitle.text = m.mediaTitle.text + " (" + str(currentitem.year).trim() + ")"
 
     m.mediaDesc.text = ""
-    if currentitem.imdbId <> invalid and Left(currentitem.imdbId, 2) = "tt" then
+    if isNonEmptyString(currentitem.imdbId) and Left(currentitem.imdbId, 2) = "tt" then
         m.ReadMediaImdbInfoTask = CreateObject("roSGNode", "AuthenticatedClient")
         requesturi = "https://imdbinfoapi.netlify.app/.netlify/functions/imdbinfo/" + currentitem.imdbId
         m.ReadMediaImdbInfoTask.uri = requesturi
@@ -31,11 +31,11 @@ sub readImdbInfo()
     print "Imdb Info loaded..."
     resultAsJson = ParseJSON(m.ReadMediaImdbInfoTask.content)
     if resultAsJson <> invalid
-        if resultAsJson.duration <> "" and resultAsJson.rating <> ""
+        if isNonEmptyString(resultAsJson.duration) and isNonEmptyString(resultAsJson.rating)
             m.mediaDesc.text = resultAsJson.duration + " | " + "Imdb: " + resultAsJson.rating
-        else if resultAsJson.duration <> ""
+        else if isNonEmptyString(resultAsJson.duration)
             m.mediaDesc.text = resultAsJson.duration
-        else if resultAsJson.rating <> ""
+        else if isNonEmptyString(resultAsJson.rating) 
             m.mediaDesc.text = "Imdb: " + resultAsJson.rating
         end if
     else
@@ -56,3 +56,15 @@ sub readPosterMode()
         m.mediaDesc.visible = true
     end if
 end sub
+
+function isNonEmptyString(value)
+    return value <> "" AND isString(value)
+end function
+
+function isString(value As Dynamic) As Boolean
+    return isValid(value) And GetInterface(value, "ifString") <> invalid
+end Function
+
+function isValid(value As Dynamic) As Boolean
+    return type(value) <> "<uninitialized>" And value <> invalid
+End Function

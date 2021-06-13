@@ -8,6 +8,7 @@ sub init()
     m.mediaTitle = m.top.findNode("mediaTitle")
     m.mediaDesc = m.top.findNode("mediaDesc")
     m.poster = m.top.findNode("mediaposter")
+    m.mathUtil = MathUtil()    
 end sub
 
 sub readmediaitem()
@@ -15,7 +16,7 @@ sub readmediaitem()
     if isNonEmptyString(currentitem.Url) then m.poster.uri = currentitem.Url
     m.mediaTitle.text = currentitem.title
 
-    if isValid(currentitem.year) then m.mediaTitle.text = m.mediaTitle.text + " (" + str(currentitem.year).trim() + ")"
+    if m.mathUtil.isNumber(currentitem.year) then m.mediaTitle.text = m.mediaTitle.text + " (" + str(currentitem.year).trim() + ")"
 
     m.mediaDesc.text = ""
     if isNonEmptyString(currentitem.imdbId) and Left(currentitem.imdbId, 2) = "tt" then
@@ -35,7 +36,7 @@ sub readImdbInfo()
             m.mediaDesc.text = resultAsJson.duration + " | " + "Imdb: " + resultAsJson.rating
         else if isNonEmptyString(resultAsJson.duration)
             m.mediaDesc.text = resultAsJson.duration
-        else if isNonEmptyString(resultAsJson.rating) 
+        else if isNonEmptyString(resultAsJson.rating)
             m.mediaDesc.text = "Imdb: " + resultAsJson.rating
         end if
     else
@@ -58,13 +59,6 @@ sub readPosterMode()
 end sub
 
 function isNonEmptyString(value)
-    return value <> "" AND isString(value)
+    strUtil = StringUtil()
+    return strUtil.isString(value) and value <> ""
 end function
-
-function isString(value As Dynamic) As Boolean
-    return isValid(value) And GetInterface(value, "ifString") <> invalid
-end Function
-
-function isValid(value As Dynamic) As Boolean
-    return type(value) <> "<uninitialized>" And value <> invalid
-End Function

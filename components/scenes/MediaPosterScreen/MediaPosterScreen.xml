@@ -4,13 +4,15 @@
         <field id="posterMode" type="string" onChange="readPosterMode" />
         <field id="mediaItem" type="node" onChange = "readmediaitem" />
     </interface>
+    <script type = "text/brightscript" uri = "pkg:/components/utils/string.brs"/>
+    <script type = "text/brightscript" uri = "pkg:/components/utils/math.brs"/>
     <script type = "text/brightscript" uri = "pkg:/components/scenes/MediaPosterScreen/MediaPosterScreen.brs"/>
     <children >
         <LayoutGroup 
             id = "infoRectangle" 
             translation = "[ 0, 44 ]" 
              itemSpacings = "[8]">
-            <Poster id="mediaposter" width="288" height="428"  />
+            <Poster id="mediaposter" width="288" height="428" />
             <Label 
                 id = "mediaTitle" width="388"
                 wrap = "true"

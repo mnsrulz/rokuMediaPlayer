@@ -7,9 +7,12 @@ sub init()
 
     m.global.AddField("videoNode", "node", false)
     m.global.AddField("lastFocusNode", "node", false) 'Use to set focus once video playback finishes up
+    m.global.AddField("liveTvSelectedIndex", "integer", 0) 'Use to set focus once video playback finishes up
     m.global.videoNode = m.video
 
     m.global.AddField("panelsetNode", "node", false)
+    m.global.AddField("isLiveTv", "boolean", false)
+
     m.global.panelsetNode = m.panelSet
 
     ' loadCategories()
@@ -25,8 +28,31 @@ function onKeyEvent(key as string, press as boolean) as boolean
                 m.video.control = "stop"
                 m.video.visible = false
                 m.global.lastFocusNode.setFocus(true)
+                m.global.isLiveTv = false
                 return true
             end if
+        end if
+
+        '''event handlers during live tv playback to change channels by pressing of up/down keys
+        if (m.global.isLiveTv)
+            if key = "down"
+                if(m.global.liveTvSelectedIndex + 1 >= m.global.lastFocusNode.content.getChildCount())  'last element cannot advance
+                    return true
+                end if
+                m.global.liveTvSelectedIndex = m.global.liveTvSelectedIndex + 1
+            else if key = "up"
+                if(m.global.liveTvSelectedIndex = 0)    'first element cannot go back
+                    return true
+                end if
+                m.global.liveTvSelectedIndex = m.global.liveTvSelectedIndex - 1
+            else
+                return false
+            end if
+            currentSelectedMediaItem = m.global.lastFocusNode.content.getChild(m.global.liveTvSelectedIndex)
+            m.video.content.url = currentSelectedMediaItem.source
+            m.video.control = "play"
+            m.global.lastFocusNode.jumpToItem = m.global.liveTvSelectedIndex
+            return true
         end if
     end if
     return false

@@ -50,7 +50,7 @@ sub onPlaylistItemsLoadCompleted()
 end sub
 
 sub setRightLabel(index)
-    m.top.rightLabel.text = str(index) + " of " + m.itemsCount
+    m.top.rightLabel.text = str(index) + " of " + str(m.top.grid.content.getChildCount())
 end sub
 
 sub onCreateNextPanel()

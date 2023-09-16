@@ -1,0 +1,18 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+<component name = "LiveTVScreen" extends = "GridPanel">
+    <interface>
+        <field id = "overhangtext" type = "string" onChange= "setOverhangText" />
+        <field id = "playlistId" type = "string" onChange = "readpostergrid" />
+    </interface>
+    <script type = "text/brightscript" uri = "pkg:/components/scenes/LiveTVScreen/LiveTVScreen.brs"/>
+    <children >
+        <PosterGrid
+            id = "liveTVGrid"
+            basePosterSize = "[ 144, 214 ]"
+            caption1NumLines = "1"
+            numColumns = "4"
+            numRows = "2" 
+            posterDisplayMode = "scaleToFit"
+            itemSpacing = "[ 16, 16 ]" />
+    </children>
+</component>

@@ -28,6 +28,10 @@ sub onPlaylistLoadCompleted()
             playlistItem.title = playlist.title
             playlistItem.ShortDescriptionLine1 = playlist.id
         end for
+
+        playlistItem = parsedContent.createChild("ContentNode")
+        playlistItem.title = "Live TV"
+        playlistItem.ShortDescriptionLine1 = "live"
         m.top.observeField("createNextPanelIndex", "onCreateNextPanel")
     else
         playlistItem = parsedContent.createChild("ContentNode")
@@ -43,7 +47,12 @@ end sub
 
 sub onCreateNextPanel()
     currentSelectedPlaylistItem = m.top.list.content.getChild(m.top.createNextPanelIndex)
-    m.gridPanel = createObject("RoSGNode", "PosterGridScreen")
-    m.gridPanel.playlistId = currentSelectedPlaylistItem.ShortDescriptionLine1
+    if currentSelectedPlaylistItem.ShortDescriptionLine1 = "live"
+        m.gridPanel = createObject("RoSGNode", "LiveTVScreen")
+        m.gridPanel.playlistId = currentSelectedPlaylistItem.ShortDescriptionLine1
+    else
+        m.gridPanel = createObject("RoSGNode", "PosterGridScreen")
+        m.gridPanel.playlistId = currentSelectedPlaylistItem.ShortDescriptionLine1
+    end if
     m.top.nextPanel = m.gridPanel
 end sub
